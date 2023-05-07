@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 
-public class S_Wielokat implements Shaper {
+public class S_Wielokat extends Polygon implements Shaper {
     protected Polygon shape;
 
     protected double centerx;
@@ -23,7 +23,7 @@ public class S_Wielokat implements Shaper {
 
     @Override
     public Shape getShape() {
-        return shape;
+        return this;
     }
 
     @Override
@@ -32,17 +32,22 @@ public class S_Wielokat implements Shaper {
         centery = y;
 
         shape = new Polygon();
-        shape.setFill(Color.BLUEVIOLET);
-        shape.setStroke(Color.BLACK);
-        shape.setStrokeWidth(5);
+        this.setFill(Color.BLUEVIOLET);
+        this.setStroke(Color.BLACK);
+        this.setStrokeWidth(5);
     }
 
     @Override
     public void setEnd(double x, double y) {
         firstx = x;
         firsty = y;
-        shape.getPoints().clear();
-        shape.getPoints().addAll(generateXgon());
+        this.getPoints().clear();
+        this.getPoints().addAll(generateXgon());
+    }
+
+    @Override
+    public void shapeSelected() {
+
     }
 
     public Double[] generateXgon() {

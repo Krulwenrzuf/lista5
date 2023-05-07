@@ -12,7 +12,7 @@
       <children>
          <ChoiceBox fx:id="wyborFigury" prefWidth="150.0" />
           <Button onAction="#onHelloButtonClick" text="Wyczyść" />
-         <Button fx:id="edit" mnemonicParsing="false" text="Edytuj" />
+         <ToggleButton mnemonicParsing="false" onAction="#editShape" text="Edytuj" />
       </children>
    </HBox>
 

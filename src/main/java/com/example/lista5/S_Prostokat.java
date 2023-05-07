@@ -5,10 +5,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
-public class S_Prostokat implements Shaper {
-    public Rectangle shape;
+public class S_Prostokat extends Rectangle implements Shaper {
     public double startx;
     public double starty;
+    public static final int min = 10;
 
     @Override
     public String toString() {
@@ -17,27 +17,50 @@ public class S_Prostokat implements Shaper {
 
     @Override
     public Shape getShape() {
-        return shape;
+        return this;
     }
 
     @Override
     public void setStart(double x, double y) {
-        shape = new Rectangle();
-        shape.setFill(Color.GREENYELLOW);
-        shape.setStroke(Color.BLACK);
-        shape.setStrokeWidth(5);
+        this.setFill(Color.GREENYELLOW);
+        this.setStroke(Color.BLACK);
+        this.setStrokeWidth(5);
 
         startx = x;
         starty = y;
-        shape.setX(x);
-        shape.setY(y);
+        this.setX(x);
+        this.setY(y);
+        this.setWidth(min);
+        this.setHeight(min);
     }
 
     @Override
     public void setEnd(double x, double y) {
-        shape.setX(Math.min(x,startx));
-        shape.setY(Math.min(y,starty));
-        shape.setWidth(Math.abs(x-startx));
-        shape.setHeight(Math.abs(y-starty));
+        if (x < startx && startx - x < min) {
+            this.setX(startx - min);
+        } else {
+            this.setX(Math.min(x, startx));
+        }
+        if (y < starty && starty - y < min) {
+            this.setY(starty - min);
+        } else {
+            this.setY(Math.min(y, starty));
+        }
+
+        double width = Math.abs(x - startx);
+        if (width < min) {
+            width = min;
+        }
+        double height = Math.abs(y - starty);
+        if (height < min) {
+            height = min;
+        }
+        this.setWidth(width);
+        this.setHeight(height);
+    }
+
+    @Override
+    public void shapeSelected() {
+
     }
 }

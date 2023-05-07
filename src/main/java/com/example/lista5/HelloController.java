@@ -7,6 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
@@ -22,12 +24,16 @@ public class HelloController {
     protected ChoiceBox<Shaper> wyborFigury;
 
     protected Shaper shape;
+    protected Shape selected;
+    protected Color selectedDefaultColor;
+    protected boolean editMode = false;
 
     public HelloController() {
         PauseTransition pauseTransition = new PauseTransition(Duration.millis(100));
         pauseTransition.setOnFinished(actionEvent -> delayedConstructor());
         pauseTransition.play();
     }
+
     public void delayedConstructor() {
         wyborFigury.getItems().add(new S_Kolo());
         wyborFigury.getItems().add(new S_Prostokat());
@@ -42,23 +48,26 @@ public class HelloController {
         canvas.setOnMouseReleased(this::drawEnd);
 
 
-        canvas.setClip(new Rectangle(canvas.getWidth(),canvas.getHeight()));
-        canvas.widthProperty().addListener((obs,oldval,newval)-> canvas.setClip(new Rectangle(canvas.getWidth(),canvas.getHeight())));
-        canvas.heightProperty().addListener((obs,oldval,newval)-> canvas.setClip(new Rectangle(canvas.getWidth(),canvas.getHeight())));
-
+        canvas.setClip(new Rectangle(canvas.getWidth(), canvas.getHeight()));
+        canvas.widthProperty().addListener((obs, oldval, newval) -> canvas.setClip(new Rectangle(canvas.getWidth(), canvas.getHeight())));
+        canvas.heightProperty().addListener((obs, oldval, newval) -> canvas.setClip(new Rectangle(canvas.getWidth(), canvas.getHeight())));
     }
-    public void drawStart(MouseEvent event){
+
+    public void drawStart(MouseEvent event) {
         welcomeText.setText(event.getX() + " " + event.getY());
-        shape.setStart(event.getX(),event.getY());
+        shape.setStart(event.getX(), event.getY());
         canvas.getChildren().add(shape.getShape());
         shape.getShape().setOpacity(0.5);
     }
-    public void drawDraw(MouseEvent event){
-        shape.setEnd(event.getX(),event.getY());
+
+    public void drawDraw(MouseEvent event) {
+        shape.setEnd(event.getX(), event.getY());
     }
-    public void drawEnd(MouseEvent event){
+
+    public void drawEnd(MouseEvent event) {
         welcomeText.setText(event.getX() + " " + event.getY());
         shape.getShape().setOpacity(1);
+
     }
 
     @FXML
@@ -67,9 +76,36 @@ public class HelloController {
     }
 
     @FXML
-    protected void edit(){
+    protected void editShape() {
 //        canvas.removeEventHandler(MouseEvent.MOUSE_PRESSED,this::drawStart);
 //        canvas.removeEventHandler(MouseEvent.MOUSE_DRAGGED,this::drawDraw);
 //        canvas.removeEventHandler(MouseEvent.MOUSE_RELEASED,this::drawEnd);
+        if (!editMode) {
+            canvas.setOnMousePressed(event -> {
+                if (event.getTarget() instanceof Shape) {
+                    if (selected != null) {
+                        selected.setFill(selectedDefaultColor);
+                    }
+                    selected = (Shape) event.getTarget();
+                    selectedDefaultColor = (Color) selected.getFill();
+                    selected.setFill(Color.BLUE);
+
+                }
+            });
+            canvas.setOnMouseDragged(null);
+            canvas.setOnMouseReleased(null);
+            editMode = true;
+        } else {
+            canvas.setOnMousePressed(this::drawStart);
+            canvas.setOnMouseDragged(this::drawDraw);
+            canvas.setOnMouseReleased(this::drawEnd);
+            if (selected != null) {
+                selected.setFill(selectedDefaultColor);
+            }
+            selected = null;
+            editMode = false;
+        }
+
+
     }
 }

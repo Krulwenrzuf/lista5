@@ -4,11 +4,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 
-public class S_Kolo implements Shaper {
+public class S_Kolo extends Circle implements Shaper {
     public Circle shape;
+    public Color color = Color.ORANGERED;
     public double startx;
     public double starty;
-
+    
     @Override
     public String toString() {
         return "Koło";
@@ -16,30 +17,41 @@ public class S_Kolo implements Shaper {
 
     @Override
     public Shape getShape() {
-        return shape;
+        return this;
     }
 
     @Override
     public void setStart(double x, double y) {
         shape = new Circle();
-        shape.setFill(Color.ORANGERED);
-        shape.setStroke(Color.BLACK);
-        shape.setStrokeWidth(5);
-        shape.setOnMouseClicked(event -> shapeselected());
+       this.setFill(color);
+       this.setStroke(Color.BLACK);
+       this.setStrokeWidth(5);
+
 
         startx = x;
         starty = y;
-        shape.setCenterX(x);
-        shape.setCenterY(y);
+       this.setCenterX(x);
+       this.setCenterY(y);
+       this.setRadius(5);
     }
 
     @Override
     public void setEnd(double x, double y) {
-        double radius = Math.sqrt(Math.pow(x - shape.getCenterX(), 2) + Math.pow(y - shape.getCenterY(), 2));
-        shape.setRadius(radius);
+        double radius = Math.sqrt(Math.pow(x -this.getCenterX(), 2) + Math.pow(y -this.getCenterY(), 2));
+        if (radius < 5){
+            radius = 5;
+        }
+       this.setRadius(radius);
+
     }
 
-    void shapeselected(){
-        shape.setFill(Color.BLUE);
+    public void shapeSelected(){
+       this.setFill(Color.BLUE);
+    }
+
+    public void shapeReset(){
+       this.setFill(color);
+       this.setStroke(Color.BLACK);
+       this.setStrokeWidth(5);
     }
 }

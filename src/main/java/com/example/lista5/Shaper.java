@@ -10,5 +10,6 @@ public interface Shaper{
     Shape getShape();
     void setStart(double x, double y);
     void setEnd(double x, double y);
+    void shapeSelected();
 
 }
