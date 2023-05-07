@@ -41,26 +41,22 @@ public class HelloController {
         canvas.setOnMouseDragged(this::drawDraw);
 
         canvas.setClip(new Rectangle(canvas.getWidth(),canvas.getHeight()));
-        canvas.widthProperty().addListener((obs,oldval,newval)->{
-            canvas.setClip(new Rectangle(canvas.getWidth(),canvas.getHeight()));
-        });
-        canvas.heightProperty().addListener((obs,oldval,newval)->{
-            canvas.setClip(new Rectangle(canvas.getWidth(),canvas.getHeight()));
-        });
+        canvas.widthProperty().addListener((obs,oldval,newval)-> canvas.setClip(new Rectangle(canvas.getWidth(),canvas.getHeight())));
+        canvas.heightProperty().addListener((obs,oldval,newval)-> canvas.setClip(new Rectangle(canvas.getWidth(),canvas.getHeight())));
 
     }
     public void drawStart(MouseEvent event){
         welcomeText.setText(event.getX() + " " + event.getY());
         shape.setStart(event.getX(),event.getY());
         canvas.getChildren().add(shape.getShape());
+        shape.getShape().setOpacity(0.5);
     }
     public void drawDraw(MouseEvent event){
         shape.setEnd(event.getX(),event.getY());
-        shape.setOpacity(0.5);
     }
     public void drawEnd(MouseEvent event){
         welcomeText.setText(event.getX() + " " + event.getY());
-        shape.setOpacity(1);
+        shape.getShape().setOpacity(1);
     }
 
     @FXML

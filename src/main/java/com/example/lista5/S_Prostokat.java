@@ -23,7 +23,7 @@ public class S_Prostokat implements Shaper {
     @Override
     public void setStart(double x, double y) {
         shape = new Rectangle();
-        shape.setFill(Color.ORANGERED);
+        shape.setFill(Color.GREENYELLOW);
         shape.setStroke(Color.BLACK);
         shape.setStrokeWidth(5);
 
@@ -39,11 +39,5 @@ public class S_Prostokat implements Shaper {
         shape.setY(Math.min(y,starty));
         shape.setWidth(Math.abs(x-startx));
         shape.setHeight(Math.abs(y-starty));
-
-    }
-
-    @Override
-    public void setOpacity(double n){
-        shape.setOpacity(n);
     }
 }

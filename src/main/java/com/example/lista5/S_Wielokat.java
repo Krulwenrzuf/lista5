@@ -6,6 +6,9 @@ import javafx.scene.shape.Shape;
 public class S_Wielokat implements Shaper {
     protected Polygon shape;
 
+    protected double centerx;
+    protected double centery;
+
     @Override
     public String toString() {
         return "Wielokąt";
@@ -17,15 +20,14 @@ public class S_Wielokat implements Shaper {
     }
     @Override
     public void setStart(double x, double y) {
+        centerx = x;
+        centery = y;
 
+        shape = new Polygon();
     }
 
     @Override
     public void setEnd(double x, double y) {
 
-    }
-
-    public void setOpacity(double n){
-        shape.setOpacity(n);
     }
 }

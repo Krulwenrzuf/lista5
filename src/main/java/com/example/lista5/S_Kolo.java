@@ -34,13 +34,7 @@ public class S_Kolo implements Shaper {
 
     @Override
     public void setEnd(double x, double y) {
-        double radius = Math.sqrt(Math.pow(x-shape.getCenterX(),2) + Math.pow(y-shape.getCenterY(),2));
+        double radius = Math.sqrt(Math.pow(x - shape.getCenterX(), 2) + Math.pow(y - shape.getCenterY(), 2));
         shape.setRadius(radius);
-
-    }
-
-    @Override
-    public void setOpacity(double n){
-        shape.setOpacity(n);
     }
 }

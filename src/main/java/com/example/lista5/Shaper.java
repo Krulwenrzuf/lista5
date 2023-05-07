@@ -6,10 +6,9 @@ import javafx.util.Duration;
 import java.lang.Math;
 
 public interface Shaper{
-    public String toString();
-    public Shape getShape();
-    public void setStart(double x, double y);
-    public void setEnd(double x, double y);
-    public void setOpacity(double n);
+    String toString();
+    Shape getShape();
+    void setStart(double x, double y);
+    void setEnd(double x, double y);
 
 }
