@@ -2,8 +2,10 @@ package com.example.lista5;
 
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -23,10 +25,12 @@ public class HelloController {
     @FXML
     protected ChoiceBox<Shaper> wyborFigury;
 
+    @FXML
+    protected TextField XGonField;
+
     protected Shaper shape;
-    protected Shape selected;
-    protected Color selectedDefaultColor;
-    protected boolean editMode = false;
+
+
 
     public HelloController() {
         PauseTransition pauseTransition = new PauseTransition(Duration.millis(100));
@@ -35,13 +39,17 @@ public class HelloController {
     }
 
     public void delayedConstructor() {
-        wyborFigury.getItems().add(new S_Kolo());
-        wyborFigury.getItems().add(new S_Prostokat());
-        wyborFigury.getItems().add(new S_Wielokat());
-        wyborFigury.setValue(new S_Kolo());
+        wyborFigury.getItems().addAll(
+                new S_Kolo(),
+                new S_Prostokat(),
+                new S_Wielokat(6),
+                new S_Wielokat(5)
+
+        );
+        wyborFigury.getSelectionModel().selectFirst();
 
         shape = wyborFigury.getSelectionModel().getSelectedItem();
-        wyborFigury.setOnAction(actionEvent -> shape = wyborFigury.getSelectionModel().getSelectedItem());
+        wyborFigury.setOnAction(actionEvent -> shape = wyborFigury.getSelectionModel().getSelectedItem().newShape());
 
         canvas.setOnMousePressed(this::drawStart);
         canvas.setOnMouseDragged(this::drawDraw);
@@ -54,9 +62,10 @@ public class HelloController {
     }
 
     public void drawStart(MouseEvent event) {
+        shape = shape.newShape();
         welcomeText.setText(event.getX() + " " + event.getY());
         shape.setStart(event.getX(), event.getY());
-        canvas.getChildren().add(shape.getShape());
+        canvas.getChildren().add((Node) shape);
         shape.getShape().setOpacity(0.5);
     }
 
@@ -69,43 +78,24 @@ public class HelloController {
         shape.getShape().setOpacity(1);
 
     }
-
     @FXML
     protected void onHelloButtonClick() {
         canvas.getChildren().clear();
     }
 
     @FXML
-    protected void editShape() {
-//        canvas.removeEventHandler(MouseEvent.MOUSE_PRESSED,this::drawStart);
-//        canvas.removeEventHandler(MouseEvent.MOUSE_DRAGGED,this::drawDraw);
-//        canvas.removeEventHandler(MouseEvent.MOUSE_RELEASED,this::drawEnd);
-        if (!editMode) {
-            canvas.setOnMousePressed(event -> {
-                if (event.getTarget() instanceof Shape) {
-                    if (selected != null) {
-                        selected.setFill(selectedDefaultColor);
-                    }
-                    selected = (Shape) event.getTarget();
-                    selectedDefaultColor = (Color) selected.getFill();
-                    selected.setFill(Color.BLUE);
-
-                }
-            });
-            canvas.setOnMouseDragged(null);
-            canvas.setOnMouseReleased(null);
-            editMode = true;
-        } else {
-            canvas.setOnMousePressed(this::drawStart);
-            canvas.setOnMouseDragged(this::drawDraw);
-            canvas.setOnMouseReleased(this::drawEnd);
-            if (selected != null) {
-                selected.setFill(selectedDefaultColor);
+    public void customXGon(){
+        int n;
+        try {
+            n = Integer.parseInt(XGonField.getText());
+            if (n<3){
+                throw new IllegalArgumentException();
             }
-            selected = null;
-            editMode = false;
+        } catch (Exception e){
+            n = 5;
         }
-
-
+        shape = new S_Wielokat(n);
+        wyborFigury.getItems().set(3, shape);
+        wyborFigury.getSelectionModel().select(shape);
     }
 }

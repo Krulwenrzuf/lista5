@@ -13,12 +13,24 @@ public class S_Wielokat extends Polygon implements Shaper {
     protected double firstx;
     protected double firsty;
 
-    protected static final int xgon = 6;
-    protected static final double angle = (2 * Math.PI) / xgon;
+    protected int xgon; // ilość boków x-ścianu foremnego
+    protected double angle; //kąt środkowy wielokątu
+    public S_Wielokat() {
+        xgon = 6;
+        angle = (2 * Math.PI) / xgon;
+    }
+
+    public S_Wielokat(int n) {
+        xgon = n;
+        angle = (2 * Math.PI) / xgon;
+    }
+
+
+
 
     @Override
     public String toString() {
-        return "Wielokąt";
+        return xgon + " - ścian foremny";
     }
 
     @Override
@@ -27,12 +39,18 @@ public class S_Wielokat extends Polygon implements Shaper {
     }
 
     @Override
+    public Shaper newShape() {
+        return new S_Wielokat(xgon);
+    }
+
+    @Override
     public void setStart(double x, double y) {
         centerx = x;
         centery = y;
 
         shape = new Polygon();
-        this.setFill(Color.BLUEVIOLET);
+        this.setFill(generateColor());
+        //this.setFill(Color.BLUEVIOLET);
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(5);
     }
@@ -46,9 +64,32 @@ public class S_Wielokat extends Polygon implements Shaper {
     }
 
     @Override
-    public void shapeSelected() {
-
+    public void resetShape() {
+        this.setFill(generateColor());
+        this.setStroke(Color.BLACK);
+        this.setStrokeWidth(5);
     }
+
+    @Override
+    public void moveShape(double x, double y) {
+        firstx = firstx - (centerx - x);
+        firsty = firsty - (centery - y);
+        centerx = x;
+        centery = y;
+        this.getPoints().clear();
+        this.getPoints().addAll(generateXgon());
+    }
+
+    @Override
+    public double getStartX() {
+        return centerx;
+    }
+
+    @Override
+    public double getStartY() {
+        return centery;
+    }
+
 
     public Double[] generateXgon() {
         Double[] vertexes = new Double[xgon * 2];
@@ -61,5 +102,11 @@ public class S_Wielokat extends Polygon implements Shaper {
         }
         return vertexes;
     }
-
+    public Color generateColor(){
+        int colorNum = (xgon +"qwerty").hashCode();         //tworzy hash liczby xgon
+        colorNum = Math.abs(colorNum) % 16777215;           //liczy modulo aby liczba nie była większa niż FFFFFF
+        String colorStr =Integer.toHexString(colorNum);     //zamienia int na str
+        String colorEnd = ("000000" + colorStr).substring(colorStr.length()); //dodaje wiodące zera
+        return Color.web(colorEnd);
+    }
 }

@@ -21,6 +21,11 @@ public class S_Kolo extends Circle implements Shaper {
     }
 
     @Override
+    public Shaper newShape(){
+        return new S_Kolo();
+    }
+
+    @Override
     public void setStart(double x, double y) {
         shape = new Circle();
        this.setFill(color);
@@ -45,13 +50,27 @@ public class S_Kolo extends Circle implements Shaper {
 
     }
 
-    public void shapeSelected(){
-       this.setFill(Color.BLUE);
-    }
-
-    public void shapeReset(){
+    public void resetShape(){
        this.setFill(color);
        this.setStroke(Color.BLACK);
        this.setStrokeWidth(5);
+    }
+
+    @Override
+    public void moveShape(double x, double y) {
+        this.setCenterX(x);
+        this.setCenterY(y);
+        startx = x;
+        starty = y;
+    }
+
+    @Override
+    public double getStartX() {
+        return startx;
+    }
+
+    @Override
+    public double getStartY() {
+        return starty;
     }
 }

@@ -21,6 +21,11 @@ public class S_Prostokat extends Rectangle implements Shaper {
     }
 
     @Override
+    public Shaper newShape(){
+        return new S_Prostokat();
+    }
+
+    @Override
     public void setStart(double x, double y) {
         this.setFill(Color.GREENYELLOW);
         this.setStroke(Color.BLACK);
@@ -60,7 +65,27 @@ public class S_Prostokat extends Rectangle implements Shaper {
     }
 
     @Override
-    public void shapeSelected() {
+    public void resetShape() {
+        this.setFill(Color.GREENYELLOW);
+        this.setStroke(Color.BLACK);
+        this.setStrokeWidth(5);
+    }
 
+    @Override
+    public void moveShape(double x, double y) {
+        this.setX(x);
+        this.setY(y);
+        startx = x;
+        starty = y;
+    }
+
+    @Override
+    public double getStartX() {
+        return startx;
+    }
+
+    @Override
+    public double getStartY() {
+        return starty;
     }
 }
