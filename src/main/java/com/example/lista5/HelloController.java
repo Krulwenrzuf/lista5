@@ -4,6 +4,7 @@ import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
@@ -37,8 +38,9 @@ public class HelloController {
         wyborFigury.setOnAction(actionEvent -> shape = wyborFigury.getSelectionModel().getSelectedItem());
 
         canvas.setOnMousePressed(this::drawStart);
-        canvas.setOnMouseReleased(this::drawEnd);
         canvas.setOnMouseDragged(this::drawDraw);
+        canvas.setOnMouseReleased(this::drawEnd);
+
 
         canvas.setClip(new Rectangle(canvas.getWidth(),canvas.getHeight()));
         canvas.widthProperty().addListener((obs,oldval,newval)-> canvas.setClip(new Rectangle(canvas.getWidth(),canvas.getHeight())));
@@ -62,5 +64,12 @@ public class HelloController {
     @FXML
     protected void onHelloButtonClick() {
         canvas.getChildren().clear();
+    }
+
+    @FXML
+    protected void edit(){
+//        canvas.removeEventHandler(MouseEvent.MOUSE_PRESSED,this::drawStart);
+//        canvas.removeEventHandler(MouseEvent.MOUSE_DRAGGED,this::drawDraw);
+//        canvas.removeEventHandler(MouseEvent.MOUSE_RELEASED,this::drawEnd);
     }
 }

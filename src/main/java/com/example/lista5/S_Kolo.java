@@ -25,6 +25,7 @@ public class S_Kolo implements Shaper {
         shape.setFill(Color.ORANGERED);
         shape.setStroke(Color.BLACK);
         shape.setStrokeWidth(5);
+        shape.setOnMouseClicked(event -> shapeselected());
 
         startx = x;
         starty = y;
@@ -36,5 +37,9 @@ public class S_Kolo implements Shaper {
     public void setEnd(double x, double y) {
         double radius = Math.sqrt(Math.pow(x - shape.getCenterX(), 2) + Math.pow(y - shape.getCenterY(), 2));
         shape.setRadius(radius);
+    }
+
+    void shapeselected(){
+        shape.setFill(Color.BLUE);
     }
 }
