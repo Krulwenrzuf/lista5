@@ -6,16 +6,12 @@ import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
-public class HelloController {
+public class ShapeDraw {
     @FXML
     private Label welcomeText;
 
@@ -32,7 +28,7 @@ public class HelloController {
 
 
 
-    public HelloController() {
+    public ShapeDraw() {
         PauseTransition pauseTransition = new PauseTransition(Duration.millis(100));
         pauseTransition.setOnFinished(actionEvent -> delayedConstructor());
         pauseTransition.play();
@@ -49,16 +45,21 @@ public class HelloController {
         wyborFigury.getSelectionModel().selectFirst();
 
         shape = wyborFigury.getSelectionModel().getSelectedItem();
-        wyborFigury.setOnAction(actionEvent -> shape = wyborFigury.getSelectionModel().getSelectedItem().newShape());
+        wyborFigury.setOnAction(actionEvent -> setShape());
 
         canvas.setOnMousePressed(this::drawStart);
         canvas.setOnMouseDragged(this::drawDraw);
         canvas.setOnMouseReleased(this::drawEnd);
 
 
-        canvas.setClip(new Rectangle(canvas.getWidth(), canvas.getHeight()));
+        canvas.setClip(new Rectangle(canvas.getWidth(), canvas.getHeight())); //ustawia clipping
+        //↓ responsywny clipping
         canvas.widthProperty().addListener((obs, oldval, newval) -> canvas.setClip(new Rectangle(canvas.getWidth(), canvas.getHeight())));
         canvas.heightProperty().addListener((obs, oldval, newval) -> canvas.setClip(new Rectangle(canvas.getWidth(), canvas.getHeight())));
+    }
+
+    public void setShape(){
+        shape = wyborFigury.getSelectionModel().getSelectedItem().newShape();
     }
 
     public void drawStart(MouseEvent event) {

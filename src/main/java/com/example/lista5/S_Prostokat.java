@@ -1,13 +1,18 @@
 package com.example.lista5;
 
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 
 public class S_Prostokat extends Rectangle implements Shaper {
-    public double startx;
-    public double starty;
+    public double startX;
+    public double startY;
+    public Translate translation = new Translate();
+    public Rotate rotation = new Rotate();
+    public Scale scalation = new Scale();
     public static final int min = 10;
 
     @Override
@@ -21,7 +26,7 @@ public class S_Prostokat extends Rectangle implements Shaper {
     }
 
     @Override
-    public Shaper newShape(){
+    public Shaper newShape() {
         return new S_Prostokat();
     }
 
@@ -31,61 +36,77 @@ public class S_Prostokat extends Rectangle implements Shaper {
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(5);
 
-        startx = x;
-        starty = y;
+        startX = x;
+        startY = y;
         this.setX(x);
         this.setY(y);
         this.setWidth(min);
         this.setHeight(min);
+
+        this.getTransforms().addAll(translation, rotation, scalation);
     }
 
     @Override
     public void setEnd(double x, double y) {
-        if (x < startx && startx - x < min) {
-            this.setX(startx - min);
+        if (x < startX && startX - x < min) {
+            this.setX(startX - min);
         } else {
-            this.setX(Math.min(x, startx));
+            this.setX(Math.min(x, startX));
         }
-        if (y < starty && starty - y < min) {
-            this.setY(starty - min);
+        if (y < startY && startY - y < min) {
+            this.setY(startY - min);
         } else {
-            this.setY(Math.min(y, starty));
+            this.setY(Math.min(y, startY));
         }
 
-        double width = Math.abs(x - startx);
+        double width = Math.abs(x - startX);
         if (width < min) {
             width = min;
         }
-        double height = Math.abs(y - starty);
+        double height = Math.abs(y - startY);
         if (height < min) {
             height = min;
         }
+
         this.setWidth(width);
         this.setHeight(height);
-    }
 
-    @Override
-    public void resetShape() {
-        this.setFill(Color.GREENYELLOW);
-        this.setStroke(Color.BLACK);
-        this.setStrokeWidth(5);
+        rotation.setPivotX(this.getX() + (width / 2));
+        rotation.setPivotY(this.getY() + (height / 2));
+        scalation.setPivotX(this.getX() + (width / 2));
+        scalation.setPivotY(this.getY() + (height / 2));
     }
 
     @Override
     public void moveShape(double x, double y) {
+//        startX = x;
+//        startY = y;
         this.setX(x);
         this.setY(y);
-        startx = x;
-        starty = y;
     }
 
     @Override
-    public double getStartX() {
-        return startx;
+    public double getAnchorX() {
+        return this.getX();
     }
 
     @Override
-    public double getStartY() {
-        return starty;
+    public double getAnchorY() {
+        return this.getY();
+    }
+
+    @Override
+    public Translate getTranslation() {
+        return translation;
+    }
+
+    @Override
+    public Scale getScalation() {
+        return scalation;
+    }
+
+    @Override
+    public Rotate getRotation() {
+        return rotation;
     }
 }

@@ -3,13 +3,16 @@ package com.example.lista5;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 
 public class S_Kolo extends Circle implements Shaper {
-    public Circle shape;
-    public Color color = Color.ORANGERED;
-    public double startx;
-    public double starty;
-    
+    public Translate translation = new Translate();
+    public Rotate rotation = new Rotate();
+    public Scale scalation = new Scale();
+    public static final int min = 5;
+
     @Override
     public String toString() {
         return "Koło";
@@ -21,56 +24,64 @@ public class S_Kolo extends Circle implements Shaper {
     }
 
     @Override
-    public Shaper newShape(){
+    public Shaper newShape() {
         return new S_Kolo();
     }
 
     @Override
     public void setStart(double x, double y) {
-        shape = new Circle();
-       this.setFill(color);
-       this.setStroke(Color.BLACK);
-       this.setStrokeWidth(5);
+        this.setFill(Color.ORANGERED);
+        this.setStroke(Color.BLACK);
+        this.setStrokeWidth(min);
 
+        this.setCenterX(x);
+        this.setCenterY(y);
+        this.setRadius(min);
 
-        startx = x;
-        starty = y;
-       this.setCenterX(x);
-       this.setCenterY(y);
-       this.setRadius(5);
+        this.getTransforms().addAll(translation, scalation, rotation);
+        rotation.setPivotX(this.getCenterX());
+        rotation.setPivotY(this.getCenterY());
+        scalation.setPivotX(this.getCenterX());
+        scalation.setPivotY(this.getCenterY());
     }
 
     @Override
     public void setEnd(double x, double y) {
-        double radius = Math.sqrt(Math.pow(x -this.getCenterX(), 2) + Math.pow(y -this.getCenterY(), 2));
-        if (radius < 5){
-            radius = 5;
+        double radius = Math.sqrt(Math.pow(x - this.getCenterX(), 2) + Math.pow(y - this.getCenterY(), 2));
+        if (radius < min) {
+            radius = min;
         }
-       this.setRadius(radius);
-
-    }
-
-    public void resetShape(){
-       this.setFill(color);
-       this.setStroke(Color.BLACK);
-       this.setStrokeWidth(5);
+        this.setRadius(radius);
     }
 
     @Override
     public void moveShape(double x, double y) {
         this.setCenterX(x);
         this.setCenterY(y);
-        startx = x;
-        starty = y;
     }
 
     @Override
-    public double getStartX() {
-        return startx;
+    public double getAnchorX() {
+        return this.getCenterX();
     }
 
     @Override
-    public double getStartY() {
-        return starty;
+    public double getAnchorY() {
+        return this.getCenterY();
+    }
+
+    @Override
+    public Translate getTranslation() {
+        return translation;
+    }
+
+    @Override
+    public Scale getScalation() {
+        return scalation;
+    }
+
+    @Override
+    public Rotate getRotation() {
+        return rotation;
     }
 }
