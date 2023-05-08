@@ -11,7 +11,7 @@ public class S_Kolo extends Circle implements Shaper {
     public Translate translation = new Translate();
     public Rotate rotation = new Rotate();
     public Scale scalation = new Scale();
-    public static final int min = 5;
+    public static final int min = 7; //minimalny promień
 
     @Override
     public String toString() {
@@ -32,21 +32,24 @@ public class S_Kolo extends Circle implements Shaper {
     public void setStart(double x, double y) {
         this.setFill(Color.ORANGERED);
         this.setStroke(Color.BLACK);
-        this.setStrokeWidth(min);
+        this.setStrokeWidth(5);
 
         this.setCenterX(x);
         this.setCenterY(y);
-        this.setRadius(min);
+
 
         this.getTransforms().addAll(translation, scalation, rotation);
         rotation.setPivotX(this.getCenterX());
         rotation.setPivotY(this.getCenterY());
         scalation.setPivotX(this.getCenterX());
         scalation.setPivotY(this.getCenterY());
+
+        this.setEnd(x+min,y);
     }
 
     @Override
     public void setEnd(double x, double y) {
+        //↓ ustawia promień jako odległość ze środka do punktu (x,y)
         double radius = Math.sqrt(Math.pow(x - this.getCenterX(), 2) + Math.pow(y - this.getCenterY(), 2));
         if (radius < min) {
             radius = min;

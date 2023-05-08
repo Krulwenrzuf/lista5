@@ -4,19 +4,41 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lista5.ShapeEdit">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
-   <HBox prefWidth="760.0" spacing="10.0">
+<VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lista5.ShapeEdit">
+   <MenuBar>
+     <menus>
+       <Menu mnemonicParsing="false" text="Plik">
+         <items>
+           <MenuItem mnemonicParsing="false" text="Delete" />
+         </items>
+       </Menu>
+       <Menu mnemonicParsing="false" text="Edycja">
+         <items>
+           <MenuItem mnemonicParsing="false" onAction="#setEditMode" text="Edytuj" />
+               <MenuItem mnemonicParsing="false" onAction="#onHelloButtonClick" text="Wyczyść" />
+         </items>
+       </Menu>
+       <Menu mnemonicParsing="false" text="Pomoc">
+         <items>
+           <MenuItem mnemonicParsing="false" onAction="#info" text="Informacje" />
+               <MenuItem mnemonicParsing="false" onAction="#manual" text="Instrukcja" />
+         </items>
+       </Menu>
+     </menus>
+   </MenuBar>
+   <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" VBox.vgrow="ALWAYS">
       <children>
-         <ChoiceBox fx:id="wyborFigury" prefWidth="150.0" />
-          <Button onAction="#onHelloButtonClick" text="Wyczyść" />
-         <ToggleButton fx:id="edit" mnemonicParsing="false" onAction="#setEditMode" text="Edytuj" />
-         <TextField fx:id="XGonField" onKeyTyped="#customXGon" promptText="Dowolny x-ścian" />
+         <HBox prefWidth="760.0" spacing="10.0">
+            <children>
+               <ChoiceBox fx:id="wyborFigury" prefWidth="150.0" />
+               <TextField fx:id="XGonField" onKeyTyped="#customXGon" promptText="Dowolny x-ścian" />
+               <ToggleButton fx:id="edit" mnemonicParsing="false" onAction="#setEditMode" text="Edytuj" />
+            </children>
+         </HBox>
+         <Pane fx:id="canvas" style="-fx-background-color: F0F0F0; -fx-border-color: gray;" VBox.vgrow="ALWAYS" />
       </children>
-   </HBox>
-   <Pane fx:id="canvas" style="-fx-background-color: F0F0F0; -fx-border-color: gray;" VBox.vgrow="ALWAYS" />
-
-    <Label fx:id="welcomeText" />
+      <padding>
+         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+      </padding>
+   </VBox>
 </VBox>

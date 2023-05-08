@@ -8,16 +8,17 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
 public class S_Wielokat extends Polygon implements Shaper {
-    protected double centerx;
+    protected double centerx; //↓ środek wielokąta
     protected double centery;
-    protected double firstx;
+    protected double firstx; //↓ pierwszy wierzchołek wielokąta
     protected double firsty;
     public Translate translation = new Translate();
     public Rotate rotation = new Rotate();
     public Scale scalation = new Scale();
 
     protected int xgon; // ilość boków x-ścianu foremnego
-    protected double angle; //kąt środkowy wielokątu
+    protected double angle; //kąt środkowy wielokąta
+    protected double min = 7; //minimalny promień
 
     public S_Wielokat() {
         xgon = 6;
@@ -58,12 +59,23 @@ public class S_Wielokat extends Polygon implements Shaper {
         rotation.setPivotY(this.centery);
         scalation.setPivotX(this.centerx);
         scalation.setPivotY(this.centery);
+
+        setEnd(x + min, y + min);
     }
 
     @Override
     public void setEnd(double x, double y) {
-        firstx = x;
-        firsty = y;
+        //↓ pilnuje by kształt nie był za mały (promień < min)
+        double radius = Math.sqrt(Math.pow(centerx - x, 2) + Math.pow(centery - y, 2));
+        if (radius < min) {
+            double scalar = min / radius;
+            firstx = (centerx - x) * scalar + centerx;
+            firsty = (centery - y) * scalar + centery;
+        } else {
+            firstx = x;
+            firsty = y;
+        }
+
         this.getPoints().clear();
         this.getPoints().addAll(generateXgon());
     }
@@ -103,7 +115,7 @@ public class S_Wielokat extends Polygon implements Shaper {
         return rotation;
     }
 
-    public Double[] generateXgon() {
+    public Double[] generateXgon() { //generuje wierzchołki wielokąta wykorzystując obrót liczby zespolonej (pierwszego wierzchołka)
         Double[] vertexes = new Double[xgon * 2];
         vertexes[0] = firstx;
         vertexes[1] = firsty;
@@ -115,9 +127,9 @@ public class S_Wielokat extends Polygon implements Shaper {
         return vertexes;
     }
 
-    public Color generateColor() {
-        int colorNum = (xgon + "qwerty").hashCode();                           //tworzy hash liczby xgon
-        colorNum = Math.abs(colorNum) % 16777215;                               //liczy modulo aby liczba nie była większa niż FFFFFF
+    public Color generateColor() { //generuje unikalny kolor dla wielokąta foremnego o ilości boków xgon
+        int colorNum = (xgon + "kabanos").hashCode();                           //tworzy hash liczby xgon
+        colorNum = Math.abs(colorNum) % 16777215;                               //liczy modulo aby liczba nie była większa niż 0xFFFFFF
         String colorStr = Integer.toHexString(colorNum);                        //zamienia int na str
         String colorEnd = ("000000" + colorStr).substring(colorStr.length());   //dodaje wiodące zera
         return Color.web(colorEnd);

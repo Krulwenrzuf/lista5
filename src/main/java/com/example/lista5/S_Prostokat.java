@@ -13,7 +13,7 @@ public class S_Prostokat extends Rectangle implements Shaper {
     public Translate translation = new Translate();
     public Rotate rotation = new Rotate();
     public Scale scalation = new Scale();
-    public static final int min = 10;
+    public static final int min = 14; //minimalny rozmiar
 
     @Override
     public String toString() {
@@ -40,14 +40,14 @@ public class S_Prostokat extends Rectangle implements Shaper {
         startY = y;
         this.setX(x);
         this.setY(y);
-        this.setWidth(min);
-        this.setHeight(min);
-
         this.getTransforms().addAll(translation, rotation, scalation);
+
+        this.setEnd(x+min,y+min);
     }
 
     @Override
     public void setEnd(double x, double y) {
+        //↓ metody pozwalające rysować prostokąt w dowolną stronę, a nie tylko w kierunku +x i +y
         if (x < startX && startX - x < min) {
             this.setX(startX - min);
         } else {
@@ -71,6 +71,7 @@ public class S_Prostokat extends Rectangle implements Shaper {
         this.setWidth(width);
         this.setHeight(height);
 
+        //↓ ustawienie punktu obrotu i skalowania na środek prostokąta
         rotation.setPivotX(this.getX() + (width / 2));
         rotation.setPivotY(this.getY() + (height / 2));
         scalation.setPivotX(this.getX() + (width / 2));
