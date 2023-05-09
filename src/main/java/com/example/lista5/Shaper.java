@@ -33,14 +33,14 @@ public interface Shaper extends Serializable {
     Shaper newShape();
 
     /**
-     * Ustawia początek generowania figury w punkcie (x,y)
+     * Ustawia początek generowania figury w punkcie (shapeData.startX,shapeData.startY)
      */
-    void setStart();
+    void generateStart();
 
     /**
-     * Ustawia koniec generowania figury w punkcie (x,y)
+     * Ustawia koniec generowania figury w punkcie (shapeData.endX,shapeData.endY)
      */
-    void setEnd(); //
+    void generateEnd(); //
 
     /**
      * @return wartość x punktu zaczepienia

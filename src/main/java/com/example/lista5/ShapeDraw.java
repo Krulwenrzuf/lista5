@@ -82,7 +82,7 @@ public class ShapeDraw {
     public void drawStart(MouseEvent event) {
         shape = shape.newShape();
         shape.getData().setStart(event.getX(), event.getY());
-        shape.setStart();
+        shape.generateStart();
         canvas.getChildren().add((Node) shape);
         shape.getShape().setOpacity(0.5);
     }
@@ -94,7 +94,7 @@ public class ShapeDraw {
      */
     public void drawDraw(MouseEvent event) {
         shape.getData().setEnd(event.getX(), event.getY());
-        shape.setEnd();
+        shape.generateEnd();
     }
 
     /**
@@ -170,16 +170,10 @@ public class ShapeDraw {
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(primaryStage);
 
-//        VBox dialogVbox = new VBox(20);
-//        dialogVbox.setAlignment(Pos.TOP_LEFT);
-//        dialogVbox.setPadding(new Insets(20,20,20,20));
-//        dialogVbox.setSpacing(10);
-
         TextFlow dialogBox = new TextFlow();
         dialogBox.setTextAlignment(TextAlignment.LEFT);
         dialogBox.setPadding(new Insets(20, 20, 20, 20));
         dialogBox.setLineSpacing(10);
-
 
         Text title = new Text("Instrukcja obsługi\n");
         title.setFont(Font.font("Times New Roman", FontWeight.BOLD, 30.0));

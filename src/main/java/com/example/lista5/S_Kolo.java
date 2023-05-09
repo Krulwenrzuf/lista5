@@ -40,7 +40,7 @@ public class S_Kolo extends Circle implements Shaper {
     }
 
     @Override
-    public void setStart() {
+    public void generateStart() {
         this.setFill(shapeData.color);
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(5);
@@ -54,12 +54,12 @@ public class S_Kolo extends Circle implements Shaper {
         shapeData.scale.setPivotX(this.getCenterX());
         shapeData.scale.setPivotY(this.getCenterY());
 
-        setEnd();
+        generateEnd();
     }
 
 
     @Override
-    public void setEnd() {
+    public void generateEnd() {
         //↓ ustawia promień jako odległość ze środka do punktu (x,y)
         double radius = shapeData.getDist();
         if (radius < min) {

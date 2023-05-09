@@ -41,7 +41,7 @@ public class S_Prostokat extends Rectangle implements Shaper {
         shapeData.color = Color.GREENYELLOW;
     }
     @Override
-    public void setStart() {
+    public void generateStart() {
         this.setFill(shapeData.color);
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(5);
@@ -50,11 +50,11 @@ public class S_Prostokat extends Rectangle implements Shaper {
         this.setY(shapeData.startY);
         this.getTransforms().addAll(shapeData.translate, shapeData.rotate, shapeData.scale);
 
-        setEnd();
+        generateEnd();
     }
 
     @Override
-    public void setEnd() {
+    public void generateEnd() {
         //↓ metody pozwalające rysować prostokąt w dowolną stronę, a nie tylko w kierunku +x i +y
         if (shapeData.endX < shapeData.startX && shapeData.startX - shapeData.endX < min) {
             this.setX(shapeData.startX - min);

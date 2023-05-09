@@ -60,7 +60,7 @@ public class S_Wielokat extends Polygon implements Shaper {
     }
 
     @Override
-    public void setStart() {
+    public void generateStart() {
 
         this.setFill(shapeData.color);
         this.setStroke(Color.BLACK);
@@ -73,11 +73,11 @@ public class S_Wielokat extends Polygon implements Shaper {
         shapeData.scale.setPivotY(shapeData.startY);
 
         //this.getPoints().addAll(generateXgon(shapeData.startX + min, shapeData.startY + min));
-        setEnd();
+        generateEnd();
     }
 
     @Override
-    public void setEnd() {
+    public void generateEnd() {
         //↓ pilnuje by kształt nie był za mały (promień < min)
         double radius = shapeData.getDist();
         if (radius == 0) {

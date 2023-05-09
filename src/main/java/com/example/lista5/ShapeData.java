@@ -98,7 +98,7 @@ public class ShapeData implements Serializable {
     }
 
     /**
-     *
+     * Liczy dystans pomiędzy punktem startu a punktem końca
      * @return Dystans pomiędzy punktem startu a punktem końca
      */
     public double getDist() {

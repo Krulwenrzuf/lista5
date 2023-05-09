@@ -46,7 +46,7 @@ public class ShapeEdit extends ShapeDraw {
     ColorPicker colorPicker;
 
     /**
-     * Funkcja wywoływana przez aktywacje menu wyboru kształtu
+     * Funkcja wywoływana przez aktywacje menu wyboru kształtu,
      * Wyłącza tryb edycji
      */
     @Override

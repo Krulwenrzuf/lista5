@@ -74,8 +74,8 @@ public class ShapeSave extends ShapeEdit{
             }
 
             for (Shaper shaper: arrayList) {
-                shaper.setStart();
-                shaper.setEnd();
+                shaper.generateStart();
+                shaper.generateEnd();
                 canvas.getChildren().add((Node) shaper);
             }
             objectInputStream.close();
