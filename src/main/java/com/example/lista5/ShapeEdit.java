@@ -11,6 +11,9 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
 public class ShapeEdit extends ShapeDraw {
+    /**
+     * Przełącznik trybu edycji
+     */
     @FXML
     public ToggleButton edit;
 
@@ -32,7 +35,14 @@ public class ShapeEdit extends ShapeDraw {
 //    protected double xdif;
 //    protected double ydif;
 
+    /**
+     * Wartość x myszy po kliknięciu, lub przesunięciu figury
+     */
     protected double xclick;
+
+    /**
+     * Wartość y myszy po kliknięciu, lub przesunięciu figury
+     */
     protected double yclick;
 
     /**
@@ -60,7 +70,7 @@ public class ShapeEdit extends ShapeDraw {
     /**
      * Włącza tryb edycji i ustawia listenery do edycji figur
      */
-    protected void enableEditMode() { //aktywuje tryb edycji i przypisuje figurom Listenery
+    protected void enableEditMode() {
         canvas.setOnMousePressed(this::selectShape);
         canvas.setOnMouseDragged(this::moveShape);
         canvas.setOnMouseReleased(null);
@@ -132,9 +142,9 @@ public class ShapeEdit extends ShapeDraw {
      * Przesuwa kształt <code>selected</code> o wielkość przesunięcia myszy od kliknięcia, lub ostatniego wywołania funkcji
      * @param mouseEvent Event przesunięcia myszy
      */
-    public void moveShape(MouseEvent mouseEvent) { //poruszenie myszką -> zmienia położenie kształtu
+    public void moveShape(MouseEvent mouseEvent) {
         if (mouseEvent.getTarget() instanceof Shaper  && selected != null) {
-            Translate translation = selected.getTranslation();
+            Translate translation = selected.getData().translate;
             translation.setX(translation.getX() + mouseEvent.getX() - xclick); //zmiana położenia figury o dystans jaki pokonała mysz od ostatniego uruchomienia funkcji
             translation.setY(translation.getY() + mouseEvent.getY() - yclick); // xyclick - punkt ostatniej zmiany położenia
 
@@ -152,7 +162,7 @@ public class ShapeEdit extends ShapeDraw {
         if (scrollEvent.getTarget() instanceof Shaper && selected != null) {
             //Zmienna ustalająca ilość skalowania, wprost proporcjonalna do przescrollowanej odległości, odwrotnie proporcjonalna do rzeczywistej wielkości figury (aby uzyskać płynne skalowanie)
             double scalingConst = (1+(scrollEvent.getDeltaY() / (5 * selected.getShape().getBoundsInParent().getWidth())));
-            Scale scalation = selected.getScalation();
+            Scale scalation = selected.getData().scale;
             scalation.setX(scalation.getX() * scalingConst);
             scalation.setY(scalation.getY() * scalingConst);
             if (selected.getShape().getBoundsInParent().getHeight() < 16) {
@@ -167,9 +177,9 @@ public class ShapeEdit extends ShapeDraw {
      * Obraca kształt <code>selected</code> o wielkość przesunięcia scrolla
      * @param scrollEvent - Event przesunięcia scrolla
      */
-    public void rotateShape(ScrollEvent scrollEvent) { //wciśnięcie control + obrócenie scrolla -> obraca kształt
+    public void rotateShape(ScrollEvent scrollEvent) {
         if (scrollEvent.getTarget() instanceof Shaper  && selected != null) {
-            Rotate rotation = selected.getRotation();
+            Rotate rotation = selected.getData().rotate;
             rotation.setAngle(rotation.getAngle() + scrollEvent.getDeltaY() / 16);
         }
     }

@@ -3,21 +3,24 @@ package com.example.lista5;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
+
+import java.io.Serial;
 
 public class S_Prostokat extends Rectangle implements Shaper {
-    public double startX;
-    public double startY;
-    public Translate translation = new Translate();
-    public Rotate rotation = new Rotate();
-    public Scale scalation = new Scale();
+    @Serial
+    private static final long serialVersionUID = 3L;
+
+    ShapeData shapeData = new ShapeData();
     public static final int min = 14; //minimalny rozmiar
 
     @Override
     public String toString() {
         return "Prostokąt";
+    }
+
+    @Override
+    public ShapeData getData() {
+        return shapeData;
     }
 
     @Override
@@ -31,39 +34,39 @@ public class S_Prostokat extends Rectangle implements Shaper {
     }
 
     @Override
-    public void setStart(double x, double y) {
+    public void setStart() {
         this.setFill(Color.GREENYELLOW);
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(5);
 
-        startX = x;
-        startY = y;
-        this.setX(x);
-        this.setY(y);
-        this.getTransforms().addAll(translation, rotation, scalation);
+        this.setX(shapeData.startX);
+        this.setY(shapeData.startY);
+        this.getTransforms().addAll(shapeData.translate, shapeData.rotate, shapeData.scale);
 
-        this.setEnd(x+min,y+min);
+//        this.setWidth(min);
+//        this.setHeight(min);
+        setEnd();
     }
 
     @Override
-    public void setEnd(double x, double y) {
+    public void setEnd() {
         //↓ metody pozwalające rysować prostokąt w dowolną stronę, a nie tylko w kierunku +x i +y
-        if (x < startX && startX - x < min) {
-            this.setX(startX - min);
+        if (shapeData.endX < shapeData.startX && shapeData.startX - shapeData.endX < min) {
+            this.setX(shapeData.startX - min);
         } else {
-            this.setX(Math.min(x, startX));
+            this.setX(Math.min(shapeData.endX, shapeData.startX));
         }
-        if (y < startY && startY - y < min) {
-            this.setY(startY - min);
+        if (shapeData.endY < shapeData.startY && shapeData.startY - shapeData.endY < min) {
+            this.setY(shapeData.startY - min);
         } else {
-            this.setY(Math.min(y, startY));
+            this.setY(Math.min(shapeData.endY, shapeData.startY));
         }
 
-        double width = Math.abs(x - startX);
+        double width = Math.abs(shapeData.endX - shapeData.startX);
         if (width < min) {
             width = min;
         }
-        double height = Math.abs(y - startY);
+        double height = Math.abs(shapeData.endY - shapeData.startY);
         if (height < min) {
             height = min;
         }
@@ -72,16 +75,14 @@ public class S_Prostokat extends Rectangle implements Shaper {
         this.setHeight(height);
 
         //↓ ustawienie punktu obrotu i skalowania na środek prostokąta
-        rotation.setPivotX(this.getX() + (width / 2));
-        rotation.setPivotY(this.getY() + (height / 2));
-        scalation.setPivotX(this.getX() + (width / 2));
-        scalation.setPivotY(this.getY() + (height / 2));
+        shapeData.rotate.setPivotX(this.getX() + (width / 2));
+        shapeData.rotate.setPivotY(this.getY() + (height / 2));
+        shapeData.scale.setPivotX(this.getX() + (width / 2));
+        shapeData.scale.setPivotY(this.getY() + (height / 2));
     }
 
     @Override
     public void moveShape(double x, double y) {
-//        startX = x;
-//        startY = y;
         this.setX(x);
         this.setY(y);
     }
@@ -94,20 +95,5 @@ public class S_Prostokat extends Rectangle implements Shaper {
     @Override
     public double getAnchorY() {
         return this.getY();
-    }
-
-    @Override
-    public Translate getTranslation() {
-        return translation;
-    }
-
-    @Override
-    public Scale getScalation() {
-        return scalation;
-    }
-
-    @Override
-    public Rotate getRotation() {
-        return rotation;
     }
 }

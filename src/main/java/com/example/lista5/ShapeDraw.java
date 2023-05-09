@@ -16,12 +16,21 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class ShapeDraw {
+    /**
+     * Pole na którym rysuje się figury
+     */
     @FXML
     protected Pane canvas;
 
+    /**
+     * Okienko wyboru figury
+     */
     @FXML
     protected ChoiceBox<Shaper> wyborFigury;
 
+    /**
+     * Pole input do rysowania dowolnego x-kąta foremnego
+     */
     @FXML
     protected TextField XGonField;
 
@@ -67,25 +76,30 @@ public class ShapeDraw {
 
     /**
      * Ustala początek rysowania kształtu, dodaje nowy kształt, ustawia przezroczystość na czas rysowania
+     *
      * @param event Event wciśnięcia myszy
      */
     public void drawStart(MouseEvent event) {
         shape = shape.newShape();
-        shape.setStart(event.getX(), event.getY());
+        shape.getData().setStart(event.getX(), event.getY());
+        shape.setStart();
         canvas.getChildren().add((Node) shape);
         shape.getShape().setOpacity(0.5);
     }
 
     /**
      * Ustawia aktualny koniec rysowania kształtu
+     *
      * @param event Event przesunięcia myszy
      */
     public void drawDraw(MouseEvent event) {
-        shape.setEnd(event.getX(), event.getY());
+        shape.getData().setEnd(event.getX(), event.getY());
+        shape.setEnd();
     }
 
     /**
      * Przywraca brak przezroczystości
+     *
      * @param event Event odkliknięcia myszy
      */
     public void drawEnd(MouseEvent event) {

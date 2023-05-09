@@ -3,19 +3,22 @@ package com.example.lista5;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
+import java.io.Serial;
 
 public class S_Kolo extends Circle implements Shaper {
-    public Translate translation = new Translate();
-    public Rotate rotation = new Rotate();
-    public Scale scalation = new Scale();
+    @Serial
+    private static final long serialVersionUID = 2L;
     public static final int min = 7; //minimalny promień
+    public ShapeData shapeData = new ShapeData();
 
     @Override
     public String toString() {
         return "Koło";
+    }
+
+    @Override
+    public ShapeData getData() {
+        return shapeData;
     }
 
     @Override
@@ -29,32 +32,34 @@ public class S_Kolo extends Circle implements Shaper {
     }
 
     @Override
-    public void setStart(double x, double y) {
+    public void setStart() {
         this.setFill(Color.ORANGERED);
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(5);
 
-        this.setCenterX(x);
-        this.setCenterY(y);
+        this.setCenterX(shapeData.startX);
+        this.setCenterY(shapeData.startY);
 
+        this.getTransforms().addAll(shapeData.translate, shapeData.scale, shapeData.rotate);
+        shapeData.rotate.setPivotX(this.getCenterX());
+        shapeData.rotate.setPivotY(this.getCenterY());
+        shapeData.scale.setPivotX(this.getCenterX());
+        shapeData.scale.setPivotY(this.getCenterY());
 
-        this.getTransforms().addAll(translation, scalation, rotation);
-        rotation.setPivotX(this.getCenterX());
-        rotation.setPivotY(this.getCenterY());
-        scalation.setPivotX(this.getCenterX());
-        scalation.setPivotY(this.getCenterY());
-
-        this.setEnd(x+min,y);
+        setEnd();
     }
 
+
     @Override
-    public void setEnd(double x, double y) {
+    public void setEnd() {
+
         //↓ ustawia promień jako odległość ze środka do punktu (x,y)
-        double radius = Math.sqrt(Math.pow(x - this.getCenterX(), 2) + Math.pow(y - this.getCenterY(), 2));
+        double radius = shapeData.getDist();
         if (radius < min) {
             radius = min;
         }
         this.setRadius(radius);
+
     }
 
     @Override
@@ -71,20 +76,5 @@ public class S_Kolo extends Circle implements Shaper {
     @Override
     public double getAnchorY() {
         return this.getCenterY();
-    }
-
-    @Override
-    public Translate getTranslation() {
-        return translation;
-    }
-
-    @Override
-    public Scale getScalation() {
-        return scalation;
-    }
-
-    @Override
-    public Rotate getRotation() {
-        return rotation;
     }
 }

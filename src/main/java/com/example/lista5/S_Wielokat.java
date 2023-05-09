@@ -3,19 +3,14 @@ package com.example.lista5;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
+
+import java.io.Serial;
 
 public class S_Wielokat extends Polygon implements Shaper {
-    protected double centerx; //↓ środek wielokąta
-    protected double centery;
-    protected double firstx; //↓ pierwszy wierzchołek wielokąta
-    protected double firsty;
-    public Translate translation = new Translate();
-    public Rotate rotation = new Rotate();
-    public Scale scalation = new Scale();
+    @Serial
+    private static final long serialVersionUID = 4L;
 
+    ShapeData shapeData = new ShapeData();
     protected int xgon; // ilość boków x-ścianu foremnego
     protected double angle; //kąt środkowy wielokąta
     protected double min = 7; //minimalny promień
@@ -36,6 +31,11 @@ public class S_Wielokat extends Polygon implements Shaper {
     }
 
     @Override
+    public ShapeData getData() {
+        return shapeData;
+    }
+
+    @Override
     public Shape getShape() {
         return this;
     }
@@ -46,83 +46,67 @@ public class S_Wielokat extends Polygon implements Shaper {
     }
 
     @Override
-    public void setStart(double x, double y) {
-        centerx = x;
-        centery = y;
+    public void setStart() {
 
         this.setFill(generateColor());
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(5);
 
-        this.getTransforms().addAll(translation, rotation, scalation);
-        rotation.setPivotX(this.centerx);
-        rotation.setPivotY(this.centery);
-        scalation.setPivotX(this.centerx);
-        scalation.setPivotY(this.centery);
+        this.getTransforms().addAll(shapeData.translate, shapeData.rotate, shapeData.scale);
+        shapeData.rotate.setPivotX(shapeData.startX);
+        shapeData.rotate.setPivotY(shapeData.startY);
+        shapeData.scale.setPivotX(shapeData.startX);
+        shapeData.scale.setPivotY(shapeData.startY);
 
-        setEnd(x + min, y + min);
+        //this.getPoints().addAll(generateXgon(shapeData.startX + min, shapeData.startY + min));
+        setEnd();
     }
 
     @Override
-    public void setEnd(double x, double y) {
+    public void setEnd() {
         //↓ pilnuje by kształt nie był za mały (promień < min)
-        double radius = Math.sqrt(Math.pow(centerx - x, 2) + Math.pow(centery - y, 2));
-        if (radius < min) {
+        double radius = shapeData.getDist();
+        if (radius == 0) {
+            shapeData.endX = shapeData.startX + 5;
+            shapeData.endY = shapeData.startY + 5;
+        } else if (radius < min) {
             double scalar = min / radius;
-            firstx = (centerx - x) * scalar + centerx;
-            firsty = (centery - y) * scalar + centery;
-        } else {
-            firstx = x;
-            firsty = y;
+            shapeData.endX = (shapeData.startX - shapeData.endX) * scalar + shapeData.startX;
+            shapeData.endY = (shapeData.startY - shapeData.endY) * scalar + shapeData.startY;
         }
 
         this.getPoints().clear();
-        this.getPoints().addAll(generateXgon());
+        this.getPoints().addAll(generateXgon(shapeData.endX, shapeData.endY));
     }
 
     @Override
     public void moveShape(double x, double y) {
-        firstx = firstx - (centerx - x);
-        firsty = firsty - (centery - y);
-        centerx = x;
-        centery = y;
+        shapeData.endX = shapeData.endX - (shapeData.startX - x);
+        shapeData.endY = shapeData.endY - (shapeData.startY - y);
+        shapeData.startX = x;
+        shapeData.startY = y;
         this.getPoints().clear();
-        this.getPoints().addAll(generateXgon());
+        this.getPoints().addAll(generateXgon(shapeData.endX, shapeData.endY));
     }
 
     @Override
     public double getAnchorX() {
-        return centerx;
+        return shapeData.startX;
     }
 
     @Override
     public double getAnchorY() {
-        return centery;
+        return shapeData.startY;
     }
 
-    @Override
-    public Translate getTranslation() {
-        return translation;
-    }
-
-    @Override
-    public Scale getScalation() {
-        return scalation;
-    }
-
-    @Override
-    public Rotate getRotation() {
-        return rotation;
-    }
-
-    public Double[] generateXgon() { //generuje wierzchołki wielokąta wykorzystując obrót liczby zespolonej (pierwszego wierzchołka)
+    public Double[] generateXgon(double x, double y) { //generuje wierzchołki wielokąta wykorzystując obrót liczby zespolonej (pierwszego wierzchołka)
         Double[] vertexes = new Double[xgon * 2];
-        vertexes[0] = firstx;
-        vertexes[1] = firsty;
+        vertexes[0] = x;
+        vertexes[1] = y;
 
         for (int i = 1; i < xgon; i++) {
-            vertexes[i * 2] = centerx + (firstx - centerx) * Math.cos(angle * i) - (firsty - centery) * Math.sin(angle * i);
-            vertexes[i * 2 + 1] = centery + (firstx - centerx) * Math.sin(angle * i) + (firsty - centery) * Math.cos(angle * i);
+            vertexes[i * 2] = shapeData.startX + (x - shapeData.startX) * Math.cos(angle * i) - (y - shapeData.startY) * Math.sin(angle * i);
+            vertexes[i * 2 + 1] = shapeData.startY + (x - shapeData.startX) * Math.sin(angle * i) + (y - shapeData.startY) * Math.cos(angle * i);
         }
         return vertexes;
     }

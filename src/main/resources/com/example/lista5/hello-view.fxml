@@ -4,25 +4,25 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lista5.ShapeEdit">
+<VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lista5.ShapeSave">
     <MenuBar>
         <menus>
             <Menu mnemonicParsing="false" text="Plik">
                 <items>
-                    <MenuItem mnemonicParsing="false" text="Delete"/>
+                    <MenuItem mnemonicParsing="false" onAction="#shapeSave" text="Zapisz" />
+               <MenuItem mnemonicParsing="false" onAction="#shapeLoad" text="Wczytaj" />
                 </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Edycja">
                 <items>
-                    <MenuItem mnemonicParsing="false" onAction="#setEditMode" text="Edytuj"/>
-                    <MenuItem mnemonicParsing="false" onAction="#erase" text="Wyczyść"/>
+                    <MenuItem mnemonicParsing="false" onAction="#setEditMode" text="Edytuj" />
+                    <MenuItem mnemonicParsing="false" onAction="#erase" text="Wyczyść" />
                 </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Pomoc">
                 <items>
-                    <MenuItem mnemonicParsing="false" onAction="#info" text="Informacje"/>
-                    <MenuItem mnemonicParsing="false" onAction="#manual" text="Instrukcja"/>
+                    <MenuItem mnemonicParsing="false" onAction="#info" text="Informacje" />
+                    <MenuItem mnemonicParsing="false" onAction="#manual" text="Instrukcja" />
                 </items>
             </Menu>
         </menus>
@@ -31,15 +31,15 @@
         <children>
             <HBox prefWidth="760.0" spacing="10.0">
                 <children>
-                    <ChoiceBox fx:id="wyborFigury" prefWidth="150.0"/>
-                    <TextField fx:id="XGonField" onKeyTyped="#customXGon" promptText="Dowolny x-ścian"/>
-                    <ToggleButton fx:id="edit" mnemonicParsing="false" onAction="#setEditMode" text="Edytuj"/>
+                    <ChoiceBox fx:id="wyborFigury" prefWidth="150.0" />
+                    <TextField fx:id="XGonField" onKeyTyped="#customXGon" promptText="Dowolny x-ścian" />
+                    <ToggleButton fx:id="edit" mnemonicParsing="false" onAction="#setEditMode" text="Edytuj" />
                 </children>
             </HBox>
-            <Pane fx:id="canvas" style="-fx-background-color: F0F0F0; -fx-border-color: gray;" VBox.vgrow="ALWAYS"/>
+            <Pane fx:id="canvas" style="-fx-background-color: F0F0F0; -fx-border-color: gray;" VBox.vgrow="ALWAYS" />
         </children>
         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
         </padding>
     </VBox>
 </VBox>
