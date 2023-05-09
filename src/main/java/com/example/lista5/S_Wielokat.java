@@ -41,7 +41,7 @@ public class S_Wielokat extends Polygon implements Shaper {
 
     @Override
     public String toString() {
-        return xgon + " - ścian foremny";
+        return xgon + " - kąt foremny";
     }
 
     @Override
