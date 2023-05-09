@@ -8,6 +8,10 @@ import java.io.Serial;
 public class S_Kolo extends Circle implements Shaper {
     @Serial
     private static final long serialVersionUID = 2L;
+
+    /**
+     * Minimalny promień generowanego koła
+     */
     public static final int min = 7; //minimalny promień
     public ShapeData shapeData = new ShapeData();
 

@@ -1,6 +1,7 @@
 package com.example.lista5;
 
 import javafx.scene.shape.Shape;
+
 import java.io.Serializable;
 
 public interface Shaper extends Serializable {
@@ -11,6 +12,11 @@ public interface Shaper extends Serializable {
      */
     String toString();
 
+    /**
+     * Pozwala na dostęp do pola shapeData figury
+     *
+     * @return pole shapeData figury
+     */
     ShapeData getData();
 
     /**

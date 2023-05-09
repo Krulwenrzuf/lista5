@@ -11,8 +11,20 @@ public class S_Wielokat extends Polygon implements Shaper {
     private static final long serialVersionUID = 4L;
 
     ShapeData shapeData = new ShapeData();
-    protected int xgon; // ilość boków x-ścianu foremnego
-    protected double angle; //kąt środkowy wielokąta
+
+    /**
+     * Ilość boków x-ścianu foremnego
+     */
+    protected int xgon;
+
+    /**
+     *  Kąt środkowy wielokąta
+     */
+    protected double angle;
+
+    /**
+     * Minimalny promień generowanego wielokąta
+     */
     protected double min = 7; //minimalny promień
 
     public S_Wielokat() {
@@ -101,7 +113,13 @@ public class S_Wielokat extends Polygon implements Shaper {
         return shapeData.startY;
     }
 
-    public Double[] generateXgon(double x, double y) { //generuje wierzchołki wielokąta wykorzystując obrót liczby zespolonej (pierwszego wierzchołka)
+    /**
+     * Generuje wierzchołki wielokąta wykorzystując obrót liczby zespolonej (pierwszego wierzchołka)
+     * @param x x pierwszego wierzchołka
+     * @param y y pierwszego wierzchołka
+     * @return Tablica double z punktami wielokąta
+     */
+    public Double[] generateXgon(double x, double y) {
         Double[] vertexes = new Double[xgon * 2];
         vertexes[0] = x;
         vertexes[1] = y;
@@ -113,7 +131,11 @@ public class S_Wielokat extends Polygon implements Shaper {
         return vertexes;
     }
 
-    public Color generateColor() { //generuje unikalny kolor dla wielokąta foremnego o ilości boków xgon
+    /**
+     * Generuje unikalny kolor dla wielokąta foremnego o ilości boków xgon
+     * @return Kolor dla ilości boków xgon
+     */
+    public Color generateColor() { //
         int colorNum = (xgon + "kabanos").hashCode();                           //tworzy hash liczby xgon
         colorNum = Math.abs(colorNum) % 16777215;                               //liczy modulo aby liczba nie była większa niż 0xFFFFFF
         String colorStr = Integer.toHexString(colorNum);                        //zamienia int na str

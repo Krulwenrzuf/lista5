@@ -11,7 +11,11 @@ public class S_Prostokat extends Rectangle implements Shaper {
     private static final long serialVersionUID = 3L;
 
     ShapeData shapeData = new ShapeData();
-    public static final int min = 14; //minimalny rozmiar
+
+    /**
+     * Minimalna długość i szerokość generowanego prostokąta
+     */
+    public static final int min = 14;
 
     @Override
     public String toString() {

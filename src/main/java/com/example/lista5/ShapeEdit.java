@@ -34,12 +34,12 @@ public class ShapeEdit extends ShapeDraw {
 //    protected double ydif;
 
     /**
-     * Wartość x myszy po kliknięciu, lub przesunięciu figury
+     * Wartość x myszy po kliknięciu lub przesunięciu figury
      */
     protected double xclick;
 
     /**
-     * Wartość y myszy po kliknięciu, lub przesunięciu figury
+     * Wartość y myszy po kliknięciu lub przesunięciu figury
      */
     protected double yclick;
 
@@ -150,8 +150,8 @@ public class ShapeEdit extends ShapeDraw {
     public void moveShape(MouseEvent mouseEvent) {
         if (mouseEvent.getTarget() instanceof Shaper  && selected != null) {
             Translate translation = selected.getData().translate;
-            translation.setX(translation.getX() + mouseEvent.getX() - xclick); //zmiana położenia figury o dystans jaki pokonała mysz od ostatniego uruchomienia funkcji
-            translation.setY(translation.getY() + mouseEvent.getY() - yclick); // xyclick - punkt ostatniej zmiany położenia
+            translation.setX(translation.getX() + mouseEvent.getX() - xclick); //zmiana położenia figury o dystans, jaki pokonała mysz od ostatniego uruchomienia funkcji
+            translation.setY(translation.getY() + mouseEvent.getY() - yclick); // xyclick-punkt ostatniej zmiany położenia
 
             xclick = mouseEvent.getX();
             yclick = mouseEvent.getY();
@@ -189,6 +189,10 @@ public class ShapeEdit extends ShapeDraw {
         }
     }
 
+    /**
+     * Powoduje pojawienie się okienka wyboru kolorów
+     * @param contextMenuEvent event contextMenuRequested
+     */
     private void colorPick(ContextMenuEvent contextMenuEvent) {
         if (selected != null && contextMenuEvent.getTarget() instanceof Shaper) {
             selected.getShape().setFill(selected.getData().color);
@@ -200,6 +204,10 @@ public class ShapeEdit extends ShapeDraw {
         }
     }
 
+    /**
+     * Zmienia kolor kształtu <code>selected</code> na ten wybrany w okienku colorpickera
+     * @param actionEvent actionEvent
+     */
     private void colorShape(ActionEvent actionEvent) {
         Color color = colorPicker.getValue();
         selected.getData().color = color;

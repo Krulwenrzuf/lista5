@@ -1,12 +1,23 @@
 package com.example.lista5;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.ArrayList;
 
 public class ShapeSave extends ShapeEdit{
+    /**
+     * Otwiera okienko zapisu i zapisuje wszystkie kształty
+     * @throws IOException a
+     */
     public void shapeSave() throws IOException {
         disableEditMode();
 
@@ -34,7 +45,11 @@ public class ShapeSave extends ShapeEdit{
 
     }
 
-    public void shapeLoad() throws IOException, ClassNotFoundException {
+    /**
+     * Otwiera okienko wczytania i wczytuje figury
+     * @throws IOException a
+     */
+    public void shapeLoad() throws IOException{
 
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Pliki programu SHAPER (*.shaper)", "*.shaper");
@@ -51,7 +66,12 @@ public class ShapeSave extends ShapeEdit{
                     = new ObjectInputStream(fileInputStream);
             canvas.getChildren().clear();
 
-            ArrayList<Shaper> arrayList = (ArrayList<Shaper>) objectInputStream.readObject();
+            ArrayList<Shaper> arrayList = new ArrayList<>();
+            try {
+                arrayList = (ArrayList<Shaper>) objectInputStream.readObject();
+            } catch (Exception e){
+                popupError("niepoprawny plik");
+            }
 
             for (Shaper shaper: arrayList) {
                 shaper.setStart();
@@ -60,5 +80,26 @@ public class ShapeSave extends ShapeEdit{
             }
             objectInputStream.close();
         }
+    }
+
+    /**
+     * Powoduje wyskoczenie okienka błędu z wiadomością
+     * @param string wiadomość
+     */
+    public void popupError(String string){
+        Stage primaryStage = (Stage) canvas.getScene().getWindow();
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(primaryStage);
+        VBox dialogVbox = new VBox(20);
+        dialogVbox.setAlignment(Pos.TOP_CENTER);
+        dialogVbox.setPadding(new Insets(20, 20, 20, 20));
+        dialogVbox.setSpacing(10);
+
+        dialogVbox.getChildren().add(new Text(string));
+
+        Scene dialogScene = new Scene(dialogVbox, 300, 200);
+        dialog.setScene(dialogScene);
+        dialog.show();
     }
 }

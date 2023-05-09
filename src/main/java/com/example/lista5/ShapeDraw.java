@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 
 public class ShapeDraw {
     /**
-     * Pole na którym rysuje się figury
+     * Pole, na którym rysuje się figury
      */
     @FXML
     protected Pane canvas;
@@ -185,13 +185,15 @@ public class ShapeDraw {
         title.setFont(Font.font("Times New Roman", FontWeight.BOLD, 30.0));
         //System.out.println(Font.getFamilies());
         dialogBox.getChildren().add(title);
-        dialogBox.getChildren().add(new Text("1. Aby stworzyć nową figurę wybierz ją z menu wyboru, następne naciśnij w miejsce gdzie chcesz narysować kształt, i trzymając przycisk myszki przeciągnij kursorem aby ustawić jego wielkość\n"));
+        dialogBox.getChildren().add(new Text("1. Aby stworzyć nową figurę wybierz ją z menu wyboru, następne naciśnij w miejsce gdzie chcesz narysować kształt, i trzymając przycisk myszki przeciągnij kursorem aby ustawić jej wielkość\n"));
         dialogBox.getChildren().add(new Text("  I. Możesz stworzyć dowolny wielokąt foremny wpisując w pole edycji liczbe kątów\n"));
         dialogBox.getChildren().add(new Text("2. Aby edytować kształt, kliknij przycisk edycja a następnie wybierz kształt\n"));
         dialogBox.getChildren().add(new Text("  I. Aby przesunąć kształt, przeciągnij go na wybrane miejsce\n"));
         dialogBox.getChildren().add(new Text("  II. Aby powiększyć lub zmniejszyć kształt użyj koła myszki\n"));
         dialogBox.getChildren().add(new Text("  III. Aby obróćić kształt, przytrzymaj klawisz control i użyj koła myszki\n"));
+        dialogBox.getChildren().add(new Text("  IV. Aby zmienić kolor kliknij prawym przyciskiem myszy i wybierz dowolny kolor\n"));
         dialogBox.getChildren().add(new Text("3. Aby wyczyścić planszę wybierz z menu edycja pole wyczyść\n"));
+        dialogBox.getChildren().add(new Text("4. Możesz zapisać lub otworzyć swój rysunek korzystając z menu \"plik\"\n"));
         Scene dialogScene = new Scene(dialogBox, 500, 400);
         dialog.setScene(dialogScene);
         dialog.show();
