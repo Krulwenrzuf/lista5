@@ -13,9 +13,21 @@ import javafx.scene.transform.Translate;
 public class ShapeEdit extends ShapeDraw {
     @FXML
     public ToggleButton edit;
-    protected boolean editMode = false; //czy tryb edycji jest aktywny
-    protected Shaper selected; //aktualnie wybrany kształt
-    protected Color defColor; //kolor kształtu przed jego wybraniem
+
+    /**
+     * Czy tryb edycji jest aktywny
+     */
+    protected boolean editMode = false;
+
+    /**
+     * Aktualnie zaznaczony kształt
+     */
+    protected Shaper selected;
+
+    /**
+     * Kolor figury przed zaznaczeniem
+     */
+    protected Color defColor;
 
 //    protected double xdif;
 //    protected double ydif;
@@ -23,19 +35,21 @@ public class ShapeEdit extends ShapeDraw {
     protected double xclick;
     protected double yclick;
 
+    /**
+     * Funkcja wywoływana przez aktywacje menu wyboru kształtu
+     * Wyłącza tryb edycji
+     */
     @Override
-    public void delayedConstructor() {
-        super.delayedConstructor();
-    }
-
-    @Override
-    public void setShape() { //funkcja wywoływana przez aktywacje menu wyboru kształtu
+    public void setShape() {
         super.setShape();
         disableEditMode();
     }
 
+    /**
+     * Przełącza tryb edycji
+     */
     @FXML
-    protected void setEditMode() { //włącza i wyłącza tryb edycji
+    protected void setEditMode() {
         if (!editMode) {
             enableEditMode();
         } else {
@@ -43,6 +57,9 @@ public class ShapeEdit extends ShapeDraw {
         }
     }
 
+    /**
+     * Włącza tryb edycji i ustawia listenery do edycji figur
+     */
     protected void enableEditMode() { //aktywuje tryb edycji i przypisuje figurom Listenery
         canvas.setOnMousePressed(this::selectShape);
         canvas.setOnMouseDragged(this::moveShape);
@@ -54,7 +71,10 @@ public class ShapeEdit extends ShapeDraw {
         edit.setSelected(true);
     }
 
-    protected void disableEditMode() { //dezaktywuje tryb edycji i przywraca domyślne listenery
+    /**
+     * Wyłącza tryb edycji i przywraca domyślne listenery
+     */
+    protected void disableEditMode() {
         canvas.setOnMousePressed(this::drawStart);
         canvas.setOnMouseDragged(this::drawDraw);
         canvas.setOnMouseReleased(this::drawEnd);
@@ -67,7 +87,11 @@ public class ShapeEdit extends ShapeDraw {
         edit.setSelected(false);
     }
 
-    protected void setControlMode(KeyEvent keyEvent) { //reaguje na wciśnięcie klawisza control i zmnienia zachowanie scrolla
+    /**
+     * Sprawdza, czy jest wciśnięty klawisz control, jeśli tak, zmienia zachowanie scrolla (ze skalowania na obrót)
+     * @param keyEvent Event wciśnięcia klawisza
+     */
+    protected void setControlMode(KeyEvent keyEvent) {
         if (keyEvent.isControlDown()) {
             canvas.setOnScroll(this::rotateShape);
         } else {
@@ -75,9 +99,14 @@ public class ShapeEdit extends ShapeDraw {
         }
     }
 
-    public void selectShape(MouseEvent mouseEvent) { //kliknięcie -> oznacza kształt jako aktywny
+    /**
+     * Po kliknięciu przywraca poprzedni kształt <code>selected</code> do jego pierwotnego wyglądu (jeśli istnieje).
+     * Następnie sprawdza, czy kliknięto kształt, jeśli tak, ustawia go do zmiennej <code>selected</code> i zmienia kolor na niebieski
+     * @param mouseEvent Event kliknięcia myszy
+     */
+    public void selectShape(MouseEvent mouseEvent) {
         if (mouseEvent.getTarget() instanceof Shaper) {
-            if (selected != null) {
+            if (selected != mouseEvent.getTarget() && selected != null){
                 selected.getShape().setFill(defColor);
             }
             selected = (Shaper) mouseEvent.getTarget();
@@ -90,9 +119,19 @@ public class ShapeEdit extends ShapeDraw {
 
             xclick = mouseEvent.getX();
             yclick = mouseEvent.getY();
+        }else {
+            if (selected != null) {
+                selected.getShape().setFill(defColor);
+            }
+            selected = null;
+            defColor = null;
         }
     }
 
+    /**
+     * Przesuwa kształt <code>selected</code> o wielkość przesunięcia myszy od kliknięcia, lub ostatniego wywołania funkcji
+     * @param mouseEvent Event przesunięcia myszy
+     */
     public void moveShape(MouseEvent mouseEvent) { //poruszenie myszką -> zmienia położenie kształtu
         if (mouseEvent.getTarget() instanceof Shaper  && selected != null) {
             Translate translation = selected.getTranslation();
@@ -104,20 +143,30 @@ public class ShapeEdit extends ShapeDraw {
         }
     }
 
-    public void scaleShape(ScrollEvent scrollEvent) { //obrócenie scrolla -> powiększa i zmniejsza kształt
-        double scalingConst = 1000; //ustala szybkość skalowania
+    /**<p>Skaluje kształt <code>selected</code></p>
+     * <p>ilość skalowania jest wprost proporcjonalna do przescrollowanej odległości, odwrotnie proporcjonalna do rzeczywistej wielkości figury (aby uzyskać płynne skalowanie)</p>
+     * @param scrollEvent Event przesunięcia scrolla
+     *
+     */
+    public void scaleShape(ScrollEvent scrollEvent) {
         if (scrollEvent.getTarget() instanceof Shaper && selected != null) {
+            //Zmienna ustalająca ilość skalowania, wprost proporcjonalna do przescrollowanej odległości, odwrotnie proporcjonalna do rzeczywistej wielkości figury (aby uzyskać płynne skalowanie)
+            double scalingConst = (1+(scrollEvent.getDeltaY() / (5 * selected.getShape().getBoundsInParent().getWidth())));
             Scale scalation = selected.getScalation();
-            scalation.setX(scalation.getX() * (1+(scrollEvent.getDeltaY() / scalingConst)));
-            scalation.setY(scalation.getY() * (1+(scrollEvent.getDeltaY() / scalingConst)));
-            if (selected.getShape().getBoundsInParent().getHeight() < 20) {
-                scalation.setX(scalation.getX() / (1+(scrollEvent.getDeltaY() / scalingConst)));
-                scalation.setY(scalation.getY() / (1+(scrollEvent.getDeltaY() / scalingConst)));
+            scalation.setX(scalation.getX() * scalingConst);
+            scalation.setY(scalation.getY() * scalingConst);
+            if (selected.getShape().getBoundsInParent().getHeight() < 16) {
+                scalation.setX(scalation.getX() / scalingConst);
+                scalation.setY(scalation.getY() / scalingConst);
             }
             selected.getShape().setStrokeWidth(5/scalation.getX());
         }
     }
 
+    /**
+     * Obraca kształt <code>selected</code> o wielkość przesunięcia scrolla
+     * @param scrollEvent - Event przesunięcia scrolla
+     */
     public void rotateShape(ScrollEvent scrollEvent) { //wciśnięcie control + obrócenie scrolla -> obraca kształt
         if (scrollEvent.getTarget() instanceof Shaper  && selected != null) {
             Rotate rotation = selected.getRotation();

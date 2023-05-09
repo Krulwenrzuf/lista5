@@ -6,28 +6,78 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
 public interface Shaper {
-    String toString(); //zwraca nazwę figury, nadpisuje metodę z Object używaną do wyświetlania obiektu
+    /**
+     * Nadpisuje metodę z Object używaną do wyświetlania obiektu
+     * @return Nazwa figury
+     */
+    String toString();
 
-    Shape getShape(); //zwraca figurę jako Shape, pozwala na dostęp do metod klasy Shape
+    /**
+     * Pozwala na dostęp do metod klasy Shape
+     * @return figurę jako obiekt Shape
+     */
+    Shape getShape();
 
-    Shaper newShape(); //zwraca nową figurę tej samej klasy (oraz ilości boków w wypadku wielokąta)
+    /**
+     * @return Nową figurę tej samej klasy,
+     * Zachowuje ilość boków wielokąta
+     */
+    Shaper newShape();
 
-    Translate getTranslation(); //zwraca obiekt Translate przypisany do figury, pozwala na przesunięcia
+    /**
+     * Pozwala na przesunięcie figury
+     * @return obiekt Translate przypisany do figury
+     */
+    Translate getTranslation();
 
-    Scale getScalation(); //zwraca obiekt Scale przypisany do figury, pozwala na powiększenie/pomniejszenie
+    /**
+     * Pozwala na powiększenie/pomniejszenie figury
+     * @return obiekt Scale przypisany do figury
+     */
+    Scale getScalation(); //zwraca ,
 
-    Rotate getRotation(); //zwraca obiekt Rotate przypisany do figury, pozwala na obrócenie
+    /**
+     * Pozwala na obrócenie figury
+     * @return obiekt Rotate przypisany do figury
+     */
+    Rotate getRotation();
 
-    void setStart(double x, double y); //ustawia początek generowania figury
+    /**
+     * Ustawia początek generowania figury w punkcie (x,y)
+     * @param x wartość x
+     * @param y wartość y
+     */
+    void setStart(double x, double y);
 
-    void setEnd(double x, double y); //ustawia koniec generowania figury
+    /**
+     * Ustawia koniec generowania figury w punkcie (x,y)
+     * @param x wartość x
+     * @param y wartość y
+     */
+    void setEnd(double x, double y); //
 
-    //↓ stare metody do manualnego przesuwania figur (bez użycia translate)
-    double getAnchorX(); //zwraca punkt zaczepienia figury
+    /**
+     * @deprecated
+     * Zwraca punkt zaczepienia figury
+     * @return wartość x punktu zaczepienia
+     */
+    double getAnchorX(); //
 
+    /**
+     * @deprecated
+     * Zwraca punkt zaczepienia figury
+     * @return wartość y punktu zaczepienia
+     */
     double getAnchorY(); //zwraca punkt zaczepienia figury
 
-    void moveShape(double x, double y); //przesuwa punkt zaczepienia do punktu (x,y)
+    /**
+     * @deprecated
+     * Przesuwa punkt zaczepienia do punktu (x,y).
+     * Robi to manualnie bez użycia translate
+     * @param x wartość x
+     * @param y wartość y
+     */
+    void moveShape(double x, double y); //
 
 
 }
