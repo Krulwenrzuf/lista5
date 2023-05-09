@@ -31,9 +31,13 @@ public class S_Kolo extends Circle implements Shaper {
         return new S_Kolo();
     }
 
+    public S_Kolo(){
+        shapeData.color = Color.ORANGERED;
+    }
+
     @Override
     public void setStart() {
-        this.setFill(Color.ORANGERED);
+        this.setFill(shapeData.color);
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(5);
 
@@ -52,7 +56,6 @@ public class S_Kolo extends Circle implements Shaper {
 
     @Override
     public void setEnd() {
-
         //↓ ustawia promień jako odległość ze środka do punktu (x,y)
         double radius = shapeData.getDist();
         if (radius < min) {

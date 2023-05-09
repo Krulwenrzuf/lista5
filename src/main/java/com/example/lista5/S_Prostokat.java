@@ -33,9 +33,12 @@ public class S_Prostokat extends Rectangle implements Shaper {
         return new S_Prostokat();
     }
 
+    public S_Prostokat(){
+        shapeData.color = Color.GREENYELLOW;
+    }
     @Override
     public void setStart() {
-        this.setFill(Color.GREENYELLOW);
+        this.setFill(shapeData.color);
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(5);
 
@@ -43,8 +46,6 @@ public class S_Prostokat extends Rectangle implements Shaper {
         this.setY(shapeData.startY);
         this.getTransforms().addAll(shapeData.translate, shapeData.rotate, shapeData.scale);
 
-//        this.setWidth(min);
-//        this.setHeight(min);
         setEnd();
     }
 

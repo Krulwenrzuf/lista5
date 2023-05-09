@@ -1,7 +1,10 @@
 package com.example.lista5;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -27,11 +30,6 @@ public class ShapeEdit extends ShapeDraw {
      */
     protected Shaper selected;
 
-    /**
-     * Kolor figury przed zaznaczeniem
-     */
-    protected Color defColor;
-
 //    protected double xdif;
 //    protected double ydif;
 
@@ -44,6 +42,8 @@ public class ShapeEdit extends ShapeDraw {
      * Wartość y myszy po kliknięciu, lub przesunięciu figury
      */
     protected double yclick;
+
+    ColorPicker colorPicker;
 
     /**
      * Funkcja wywoływana przez aktywacje menu wyboru kształtu
@@ -77,6 +77,8 @@ public class ShapeEdit extends ShapeDraw {
         canvas.setOnScroll(this::scaleShape);
         canvas.getScene().setOnKeyPressed(this::setControlMode);
         canvas.getScene().setOnKeyReleased(this::setControlMode);
+        canvas.setOnContextMenuRequested(this::colorPick);
+
         editMode = true;
         edit.setSelected(true);
     }
@@ -89,10 +91,12 @@ public class ShapeEdit extends ShapeDraw {
         canvas.setOnMouseDragged(this::drawDraw);
         canvas.setOnMouseReleased(this::drawEnd);
         if (selected != null) {
-            selected.getShape().setFill(defColor);
+            selected.getShape().setFill(selected.getData().color);
+        }
+        if (colorPicker != null){
+            canvas.getChildren().remove(colorPicker);
         }
         selected = null;
-        defColor = null;
         editMode = false;
         edit.setSelected(false);
     }
@@ -115,12 +119,14 @@ public class ShapeEdit extends ShapeDraw {
      * @param mouseEvent Event kliknięcia myszy
      */
     public void selectShape(MouseEvent mouseEvent) {
+        if (colorPicker != null){
+            canvas.getChildren().remove(colorPicker);
+        }
         if (mouseEvent.getTarget() instanceof Shaper) {
             if (selected != mouseEvent.getTarget() && selected != null){
-                selected.getShape().setFill(defColor);
+                selected.getShape().setFill(selected.getData().color);
             }
             selected = (Shaper) mouseEvent.getTarget();
-            defColor = (Color) selected.getShape().getFill();
             selected.getShape().setFill(Color.BLUE);
             selected.getShape().toFront();
 
@@ -131,10 +137,9 @@ public class ShapeEdit extends ShapeDraw {
             yclick = mouseEvent.getY();
         }else {
             if (selected != null) {
-                selected.getShape().setFill(defColor);
+                selected.getShape().setFill(selected.getData().color);
             }
             selected = null;
-            defColor = null;
         }
     }
 
@@ -182,5 +187,22 @@ public class ShapeEdit extends ShapeDraw {
             Rotate rotation = selected.getData().rotate;
             rotation.setAngle(rotation.getAngle() + scrollEvent.getDeltaY() / 16);
         }
+    }
+
+    private void colorPick(ContextMenuEvent contextMenuEvent) {
+        if (selected != null && contextMenuEvent.getTarget() instanceof Shaper) {
+            selected.getShape().setFill(selected.getData().color);
+            colorPicker = new ColorPicker(selected.getData().color);
+            colorPicker.setLayoutX(contextMenuEvent.getX());
+            colorPicker.setLayoutY(contextMenuEvent.getY());
+            canvas.getChildren().add(colorPicker);
+            colorPicker.setOnAction(this::colorShape);
+        }
+    }
+
+    private void colorShape(ActionEvent actionEvent) {
+        Color color = colorPicker.getValue();
+        selected.getData().color = color;
+        selected.getShape().setFill(color);
     }
 }

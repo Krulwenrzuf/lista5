@@ -1,5 +1,6 @@
 package com.example.lista5;
 
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
@@ -18,10 +19,13 @@ public class ShapeData implements Serializable {
     public transient Translate translate = new Translate();
     public transient Rotate rotate = new Rotate();
     public transient Scale scale = new Scale();
+    public transient Color color;
+
 
     public Double[] translateData;
     public Double[] rotateData;
     public Double[] scaleData;
+    public Double[] colorData;
 
     public ShapeData() {
 
@@ -55,17 +59,24 @@ public class ShapeData implements Serializable {
     private void writeObject(ObjectOutputStream oos) throws IOException {
         translateData = new Double[]{
                 translate.getX(),
-                translate.getY()};
-        this.rotateData = new Double[]{
+                translate.getY()
+        };
+        rotateData = new Double[]{
                 rotate.getAngle(),
                 rotate.getPivotX(),
                 rotate.getPivotY()
         };
-        this.scaleData = new Double[]{
+        scaleData = new Double[]{
                 scale.getX(),
                 scale.getY(),
                 scale.getPivotX(),
                 scale.getPivotY()
+        };
+
+        colorData = new Double[]{
+                color.getRed(),
+                color.getGreen(),
+                color.getBlue()
         };
 
         oos.defaultWriteObject();
@@ -78,5 +89,6 @@ public class ShapeData implements Serializable {
         translate = new Translate(translateData[0], translateData[1]);
         rotate = new Rotate(rotateData[0],rotateData[1],rotateData[2]);
         scale = new Scale(scaleData[0], scaleData[1], scaleData[2], scaleData[3]);
+        color = new Color(colorData[0],colorData[1],colorData[2],1);
     }
 }

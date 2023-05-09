@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public class ShapeSave extends ShapeEdit{
     public void shapeSave() throws IOException {
+        disableEditMode();
+
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Pliki programu SHAPER (*.shaper)", "*.shaper");
         fileChooser.setInitialFileName("mojPlik");
@@ -33,6 +35,7 @@ public class ShapeSave extends ShapeEdit{
     }
 
     public void shapeLoad() throws IOException, ClassNotFoundException {
+
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Pliki programu SHAPER (*.shaper)", "*.shaper");
         //fileChooser.setInitialFileName("mojPlik");

@@ -18,11 +18,13 @@ public class S_Wielokat extends Polygon implements Shaper {
     public S_Wielokat() {
         xgon = 6;
         angle = (2 * Math.PI) / xgon;
+        shapeData.color = generateColor();
     }
 
     public S_Wielokat(int n) {
         xgon = n;
         angle = (2 * Math.PI) / xgon;
+        shapeData.color = generateColor();
     }
 
     @Override
@@ -48,7 +50,7 @@ public class S_Wielokat extends Polygon implements Shaper {
     @Override
     public void setStart() {
 
-        this.setFill(generateColor());
+        this.setFill(shapeData.color);
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(5);
 
