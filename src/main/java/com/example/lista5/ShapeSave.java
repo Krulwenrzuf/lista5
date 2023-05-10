@@ -129,7 +129,7 @@ public class ShapeSave extends ShapeEdit{
         title.setFont(Font.font("Times New Roman", FontWeight.BOLD, 30.0));
         //System.out.println(Font.getFamilies());
         dialogVbox.getChildren().add(title);
-        dialogVbox.getChildren().add(new Text("wersja 2.1"));
+        dialogVbox.getChildren().add(new Text("wersja 4.0"));
         dialogVbox.getChildren().add(new Text("Program do rysowania kształtów!"));
         dialogVbox.getChildren().add(new Text("Autor: Paweł Stanik"));
 
