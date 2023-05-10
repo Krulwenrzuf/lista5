@@ -76,14 +76,14 @@ public class ShapeData implements Serializable, Cloneable{
     public Double[] colorData;
 
 
-
+    /**
+     * Shaper, którego dane przechowujemy
+     * @param shaper Shaper, którego dane przechowujemy
+     */
     ShapeData(Shaper shaper){
         this.shaper = shaper;
     }
 
-    public  void tororor(){
-        shaper.getShape().setFill(Color.WHITE);
-    }
 
     /**
      * Ustawia punkt startu generowania figury

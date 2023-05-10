@@ -34,7 +34,6 @@
                     <ChoiceBox fx:id="wyborFigury" prefWidth="150.0" />
                     <TextField fx:id="XGonField" onKeyTyped="#customXGon" promptText="Dowolny x-ścian" />
                     <ToggleButton fx:id="edit" mnemonicParsing="false" onAction="#setEditMode" text="Edytuj" />
-               <Button mnemonicParsing="false" onAction="#trololo" text="Button" />
                 </children>
             </HBox>
             <Pane fx:id="canvas" style="-fx-background-color: F0F0F0; -fx-border-color: gray;" VBox.vgrow="ALWAYS" />

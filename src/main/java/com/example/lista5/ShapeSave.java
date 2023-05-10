@@ -169,8 +169,4 @@ public class ShapeSave extends ShapeEdit{
         dialog.setScene(dialogScene);
         dialog.show();
     }
-
-    public void trololo(){
-        selected.getData().tororor();
-    }
 }
