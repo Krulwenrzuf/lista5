@@ -4,44 +4,33 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serial;
+import java.util.ArrayList;
 
 public class S_Wielokat extends Polygon implements Shaper {
     @Serial
     private static final long serialVersionUID = 4L;
 
-    ShapeData shapeData = new ShapeData();
+    ShapeData shapeData = new ShapeData(this);
 
-    /**
-     * Ilość boków x-ścianu foremnego
-     */
-    protected int xgon;
+    ArrayList<Double> vertexes = new ArrayList<>();
 
-    /**
-     *  Kąt środkowy wielokąta
-     */
-    protected double angle;
+    double centerX;
 
-    /**
-     * Minimalny promień generowanego wielokąta
-     */
-    protected double min = 7; //minimalny promień
+    double centerY;
+
+    public boolean finished = false;
 
     public S_Wielokat() {
-        xgon = 6;
-        angle = (2 * Math.PI) / xgon;
-        shapeData.color = generateColor();
-    }
+        shapeData.color = Color.CORAL;
 
-    public S_Wielokat(int n) {
-        xgon = n;
-        angle = (2 * Math.PI) / xgon;
-        shapeData.color = generateColor();
     }
 
     @Override
     public String toString() {
-        return xgon + " - kąt foremny";
+        return "dowolny wielokąt";
     }
 
     @Override
@@ -56,51 +45,86 @@ public class S_Wielokat extends Polygon implements Shaper {
 
     @Override
     public Shaper newShape() {
-        return new S_Wielokat(xgon);
+        finished = true;
+        this.setOpacity(1);
+        return new S_Wielokat();
     }
 
     @Override
-    public void generateStart() {
+    public void drawStart(double x, double y) {
+        if (this.getPoints().isEmpty()) {
+            shapeData.setStart(x, y);
+            shapeData.setEnd(x, y);
 
-        this.setFill(shapeData.color);
-        this.setStroke(Color.BLACK);
-        this.setStrokeWidth(5);
+            shapeData.rotate.setPivotX(x);
+            shapeData.rotate.setPivotY(y);
+            shapeData.scale.setPivotX(x);
+            shapeData.scale.setPivotY(y);
 
-        this.getTransforms().addAll(shapeData.translate, shapeData.rotate, shapeData.scale);
-        shapeData.rotate.setPivotX(shapeData.startX);
-        shapeData.rotate.setPivotY(shapeData.startY);
-        shapeData.scale.setPivotX(shapeData.startX);
-        shapeData.scale.setPivotY(shapeData.startY);
+            this.getTransforms().addAll(shapeData.translate, shapeData.rotate, shapeData.scale);
 
-        //this.getPoints().addAll(generateXgon(shapeData.startX + min, shapeData.startY + min));
-        generateEnd();
-    }
+            this.setFill(shapeData.color);
+            this.setStroke(Color.BLACK);
+            this.setStrokeWidth(5 / shapeData.scale.getX());
 
-    @Override
-    public void generateEnd() {
-        //↓ pilnuje by kształt nie był za mały (promień < min)
-        double radius = shapeData.getDist();
-        if (radius == 0) {
-            shapeData.endX = shapeData.startX + 5;
-            shapeData.endY = shapeData.startY + 5;
-        } else if (radius < min) {
-            double scalar = min / radius;
-            shapeData.endX = (shapeData.startX - shapeData.endX) * scalar + shapeData.startX;
-            shapeData.endY = (shapeData.startY - shapeData.endY) * scalar + shapeData.startY;
+            vertexes.add(x);
+            vertexes.add(y);
+            this.getPoints().addAll(x, y, x, y);
+
+        } else if (shapeData.getDist(x, y) < 5) {
+            if(vertexes.size() > 4){
+                finished = true;
+            }
+        } else if (!finished) {
+            this.getPoints().add(x);
+            this.getPoints().add(y);
+            shapeData.setEnd(x, y);
         }
+//        else if (!finished) {
+//            vertexes.add(x);
+//            vertexes.add(y);
+//            this.getPoints().add(x);
+//            this.getPoints().add(y);
+//            System.out.println(vertexes.size());
+//        }
+    }
 
-        this.getPoints().clear();
-        this.getPoints().addAll(generateXgon(shapeData.endX, shapeData.endY));
+    @Override
+    public void drawDraw(double x, double y) {
+//        this.getPoints().clear();
+//
+//        for (Double vertex : vertexes) {
+//            this.getPoints().add(vertex);
+//        }
+
+        if (shapeData.getDist(x, y) > 5) {
+            //this.getPoints().remove(this.getPoints().size() - 1);
+            //this.getPoints().remove(this.getPoints().size() - 2);
+
+            this.getPoints().set(this.getPoints().size() - 2, x);
+            this.getPoints().set(this.getPoints().size() - 1, y);
+
+            //this.getPoints().addAll(x, y);
+            shapeData.setEnd(x, y);
+        }
+    }
+
+    @Override
+    public boolean drawEnd() {
+        if (shapeData.startX != shapeData.endX && shapeData.startY != shapeData.endY) {
+            if (!finished) {
+                vertexes.add(shapeData.endX);
+                vertexes.add(shapeData.endY);
+//                this.getPoints().add(shapeData.endX);
+//                this.getPoints().add(shapeData.endY);
+            }
+        }
+        calculateMiddlePoint();
+        return finished;
     }
 
     @Override
     public void moveShape(double x, double y) {
-        shapeData.endX = shapeData.endX - (shapeData.startX - x);
-        shapeData.endY = shapeData.endY - (shapeData.startY - y);
-        shapeData.startX = x;
-        shapeData.startY = y;
-        this.getPoints().clear();
-        this.getPoints().addAll(generateXgon(shapeData.endX, shapeData.endY));
     }
 
     @Override
@@ -114,32 +138,40 @@ public class S_Wielokat extends Polygon implements Shaper {
     }
 
     /**
-     * Generuje wierzchołki wielokąta wykorzystując obrót liczby zespolonej (pierwszego wierzchołka)
-     * @param x x pierwszego wierzchołka
-     * @param y y pierwszego wierzchołka
-     * @return Tablica double z punktami wielokąta
+     * Liczy punkt środkowy punktów w vertexes
      */
-    public Double[] generateXgon(double x, double y) {
-        Double[] vertexes = new Double[xgon * 2];
-        vertexes[0] = x;
-        vertexes[1] = y;
-
-        for (int i = 1; i < xgon; i++) {
-            vertexes[i * 2] = shapeData.startX + (x - shapeData.startX) * Math.cos(angle * i) - (y - shapeData.startY) * Math.sin(angle * i);
-            vertexes[i * 2 + 1] = shapeData.startY + (x - shapeData.startX) * Math.sin(angle * i) + (y - shapeData.startY) * Math.cos(angle * i);
+    public void calculateMiddlePoint() {
+        Double SumX = 0.0;
+        for (int i = 0; i < vertexes.size(); i += 2) {
+            SumX += vertexes.get(i);
         }
-        return vertexes;
+
+        Double SumY = 0.0;
+        for (int i = 1; i < vertexes.size(); i += 2) {
+            SumY += vertexes.get(i);
+        }
+
+        centerX = SumX / (vertexes.size() / 2.0);
+        centerY = SumY / (vertexes.size() / 2.0);
+
+        shapeData.rotate.setPivotX(centerX);
+        shapeData.rotate.setPivotY(centerY);
+        shapeData.scale.setPivotX(centerX);
+        shapeData.scale.setPivotY(centerY);
     }
 
-    /**
-     * Generuje unikalny kolor dla wielokąta foremnego o ilości boków xgon
-     * @return Kolor dla ilości boków xgon
-     */
-    public Color generateColor() { //
-        int colorNum = (xgon + "kabanos").hashCode();                           //tworzy hash liczby xgon
-        colorNum = Math.abs(colorNum) % 16777215;                               //liczy modulo aby liczba nie była większa niż 0xFFFFFF
-        String colorStr = Integer.toHexString(colorNum);                        //zamienia int na str
-        String colorEnd = ("000000" + colorStr).substring(colorStr.length());   //dodaje wiodące zera
-        return Color.web(colorEnd);
+    @Serial
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+        ois.defaultReadObject();
+
+        drawStart(shapeData.startX,shapeData.startY);
+        drawDraw(shapeData.endX,shapeData.endY);
+        drawEnd();
+
+        this.getPoints().clear();
+
+        for (Double vertex: vertexes) {
+            this.getPoints().add(vertex);
+        }
     }
 }

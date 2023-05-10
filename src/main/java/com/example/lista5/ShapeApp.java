@@ -15,6 +15,9 @@ public class ShapeApp extends Application {
         stage.setTitle("Shaper!");
         stage.setScene(scene);
         stage.show();
+
+        ShapeSave shapeSave = fxmlLoader.getController();
+        shapeSave.setStage(stage);
     }
 
     public static void main(String[] args) {

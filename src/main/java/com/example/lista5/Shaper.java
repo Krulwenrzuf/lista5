@@ -35,24 +35,30 @@ public interface Shaper extends Serializable {
     /**
      * Ustawia początek generowania figury w punkcie (shapeData.startX,shapeData.startY)
      */
-    void generateStart();
+    void drawStart(double x, double y);
 
     /**
      * Ustawia koniec generowania figury w punkcie (shapeData.endX,shapeData.endY)
      */
-    void generateEnd(); //
+    void drawDraw(double x, double y);
+
+    /**
+     * Czy rysowanie figury się zakończyło
+     * @return Czy rysowanie figury się zakończyło
+     */
+    boolean drawEnd();
 
     /**
      * @return wartość x punktu zaczepienia
      * @deprecated Zwraca punkt zaczepienia figury
      */
-    double getAnchorX(); //
+    double getAnchorX();
 
     /**
      * @return wartość y punktu zaczepienia
      * @deprecated Zwraca punkt zaczepienia figury
      */
-    double getAnchorY(); //zwraca punkt zaczepienia figury
+    double getAnchorY();
 
     /**
      * @param x wartość x
@@ -60,7 +66,7 @@ public interface Shaper extends Serializable {
      * @deprecated Przesuwa punkt zaczepienia do punktu (x,y).
      * Robi to manualnie bez użycia translate
      */
-    void moveShape(double x, double y); //
+    void moveShape(double x, double y);
 
 
 }

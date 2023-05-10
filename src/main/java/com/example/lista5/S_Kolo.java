@@ -3,6 +3,7 @@ package com.example.lista5;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
+
 import java.io.Serial;
 
 public class S_Kolo extends Circle implements Shaper {
@@ -13,7 +14,7 @@ public class S_Kolo extends Circle implements Shaper {
      * Minimalny promień generowanego koła
      */
     public static final int min = 7; //minimalny promień
-    public ShapeData shapeData = new ShapeData();
+    public ShapeData shapeData = new ShapeData(this);
 
     @Override
     public String toString() {
@@ -35,18 +36,20 @@ public class S_Kolo extends Circle implements Shaper {
         return new S_Kolo();
     }
 
-    public S_Kolo(){
+    public S_Kolo() {
         shapeData.color = Color.ORANGERED;
     }
 
     @Override
-    public void generateStart() {
+    public void drawStart(double x, double y) {
+        shapeData.setStart(x, y);
+
         this.setFill(shapeData.color);
         this.setStroke(Color.BLACK);
-        this.setStrokeWidth(5);
+        this.setStrokeWidth(5/shapeData.scale.getY());
 
-        this.setCenterX(shapeData.startX);
-        this.setCenterY(shapeData.startY);
+        this.setCenterX(x);
+        this.setCenterY(y);
 
         this.getTransforms().addAll(shapeData.translate, shapeData.scale, shapeData.rotate);
         shapeData.rotate.setPivotX(this.getCenterX());
@@ -54,19 +57,27 @@ public class S_Kolo extends Circle implements Shaper {
         shapeData.scale.setPivotX(this.getCenterX());
         shapeData.scale.setPivotY(this.getCenterY());
 
-        generateEnd();
+        drawDraw(x, y);
     }
 
 
     @Override
-    public void generateEnd() {
+    public void drawDraw(double x, double y) {
+        shapeData.setEnd(x, y);
+
         //↓ ustawia promień jako odległość ze środka do punktu (x,y)
         double radius = shapeData.getDist();
         if (radius < min) {
             radius = min;
         }
+
         this.setRadius(radius);
 
+    }
+
+    @Override
+    public boolean drawEnd() {
+        return true;
     }
 
     @Override

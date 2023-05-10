@@ -10,11 +10,11 @@ import java.io.*;
 /**
  * Wszystkie potrzebne informacje o figurze
  */
-public class ShapeData implements Serializable {
+public class ShapeData implements Serializable, Cloneable{
     @Serial
     private static final long serialVersionUID = 144L;
 
-    public Shaper shapeType;
+    public Shaper shaper;
 
     /**
      * Wartość x punktu startu generowania figury
@@ -75,6 +75,16 @@ public class ShapeData implements Serializable {
      */
     public Double[] colorData;
 
+
+
+    ShapeData(Shaper shaper){
+        this.shaper = shaper;
+    }
+
+    public  void tororor(){
+        shaper.getShape().setFill(Color.WHITE);
+    }
+
     /**
      * Ustawia punkt startu generowania figury
      * @param x x
@@ -83,8 +93,8 @@ public class ShapeData implements Serializable {
     public void setStart(double x, double y) {
         startX = x;
         startY = y;
-        endX = x;
-        endY = y;
+//        endX = x;
+//        endY = y;
     }
 
     /**
@@ -106,12 +116,17 @@ public class ShapeData implements Serializable {
     }
 
     /**
-     * Przygotowuje obiekt do zapisu zamieniając niezapisywalne pola jako tablice
-     * @param oos a
-     * @throws IOException a
+     * Liczy dystans pomiędzy punktem startu a punktem (x,y)
+     * @return Dystans pomiędzy punktem startu a punktem (x,y)
      */
-    @Serial
-    private void writeObject(ObjectOutputStream oos) throws IOException {
+    public double getDist(double x, double y) {
+        return Math.sqrt(Math.pow(startX - x, 2) + Math.pow(startY - y, 2));
+    }
+
+    /**
+     * Zamienia pola obiektowe na zmienne
+     */
+    private void encode(){
         translateData = new Double[]{
                 translate.getX(),
                 translate.getY()
@@ -133,7 +148,26 @@ public class ShapeData implements Serializable {
                 color.getGreen(),
                 color.getBlue()
         };
+    }
 
+    /**
+     * Tworzy pola obiektowe na podstawie zmiennych
+     */
+    private void decode(){
+        translate = new Translate(translateData[0], translateData[1]);
+        rotate = new Rotate(rotateData[0],rotateData[1],rotateData[2]);
+        scale = new Scale(scaleData[0], scaleData[1], scaleData[2], scaleData[3]);
+        color = new Color(colorData[0],colorData[1],colorData[2],1);
+    }
+
+    /**
+     * Przygotowuje obiekt do zapisu zamieniając niezapisywalne pola jako tablice
+     * @param oos a
+     * @throws IOException a
+     */
+    @Serial
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        encode();
         oos.defaultWriteObject();
     }
 
@@ -146,10 +180,20 @@ public class ShapeData implements Serializable {
     @Serial
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
         ois.defaultReadObject();
+        decode();
+    }
 
-        translate = new Translate(translateData[0], translateData[1]);
-        rotate = new Rotate(rotateData[0],rotateData[1],rotateData[2]);
-        scale = new Scale(scaleData[0], scaleData[1], scaleData[2], scaleData[3]);
-        color = new Color(colorData[0],colorData[1],colorData[2],1);
+    /**
+     * Tworzy kopię obiektu ShapeData
+     * @return Nowy obiekt Shapedata identyczny z obecnym
+     */
+    @Override
+    public ShapeData clone() {
+        try {
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return (ShapeData) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

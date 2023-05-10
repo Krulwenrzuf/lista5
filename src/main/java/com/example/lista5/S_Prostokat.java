@@ -10,7 +10,7 @@ public class S_Prostokat extends Rectangle implements Shaper {
     @Serial
     private static final long serialVersionUID = 3L;
 
-    ShapeData shapeData = new ShapeData();
+    ShapeData shapeData = new ShapeData(this);
 
     /**
      * Minimalna długość i szerokość generowanego prostokąta
@@ -41,37 +41,42 @@ public class S_Prostokat extends Rectangle implements Shaper {
         shapeData.color = Color.GREENYELLOW;
     }
     @Override
-    public void generateStart() {
+    public void drawStart( double x, double y) {
+        shapeData.setStart(x,y);
+
         this.setFill(shapeData.color);
         this.setStroke(Color.BLACK);
-        this.setStrokeWidth(5);
+        this.setStrokeWidth(5/shapeData.scale.getX());
 
-        this.setX(shapeData.startX);
-        this.setY(shapeData.startY);
+        this.setX(x);
+        this.setY(y);
         this.getTransforms().addAll(shapeData.translate, shapeData.rotate, shapeData.scale);
 
-        generateEnd();
+        drawDraw(x,y);
     }
 
     @Override
-    public void generateEnd() {
+    public void drawDraw( double x, double y) {
+        shapeData.setEnd(x,y);
+
         //↓ metody pozwalające rysować prostokąt w dowolną stronę, a nie tylko w kierunku +x i +y
-        if (shapeData.endX < shapeData.startX && shapeData.startX - shapeData.endX < min) {
+        if (x < shapeData.startX && shapeData.startX - x < min) {
             this.setX(shapeData.startX - min);
         } else {
-            this.setX(Math.min(shapeData.endX, shapeData.startX));
+            this.setX(Math.min(x, shapeData.startX));
         }
-        if (shapeData.endY < shapeData.startY && shapeData.startY - shapeData.endY < min) {
+        if (y < shapeData.startY && shapeData.startY - y < min) {
             this.setY(shapeData.startY - min);
         } else {
-            this.setY(Math.min(shapeData.endY, shapeData.startY));
+            this.setY(Math.min(y, shapeData.startY));
         }
 
-        double width = Math.abs(shapeData.endX - shapeData.startX);
+        double width = Math.abs(x - shapeData.startX);
+        double height = Math.abs(y - shapeData.startY);
+
         if (width < min) {
             width = min;
         }
-        double height = Math.abs(shapeData.endY - shapeData.startY);
         if (height < min) {
             height = min;
         }
@@ -84,6 +89,11 @@ public class S_Prostokat extends Rectangle implements Shaper {
         shapeData.rotate.setPivotY(this.getY() + (height / 2));
         shapeData.scale.setPivotX(this.getX() + (width / 2));
         shapeData.scale.setPivotY(this.getY() + (height / 2));
+    }
+
+    @Override
+    public boolean drawEnd() {
+        return true;
     }
 
     @Override

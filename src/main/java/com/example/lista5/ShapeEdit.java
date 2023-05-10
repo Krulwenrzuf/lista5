@@ -71,7 +71,9 @@ public class ShapeEdit extends ShapeDraw {
      * Włącza tryb edycji i ustawia listenery do edycji figur
      */
     protected void enableEditMode() {
-        canvas.setOnMousePressed(this::selectShape);
+        //canvas.setOnMousePressed(this::selectShape);
+        canvas.setOnMousePressed(mouseEvent -> selected.getShape().toFront());
+        canvas.setOnMouseMoved(this::selectShape);
         canvas.setOnMouseDragged(this::moveShape);
         canvas.setOnMouseReleased(null);
         canvas.setOnScroll(this::scaleShape);
@@ -87,12 +89,22 @@ public class ShapeEdit extends ShapeDraw {
      * Wyłącza tryb edycji i przywraca domyślne listenery
      */
     protected void disableEditMode() {
+
         canvas.setOnMousePressed(this::drawStart);
+        canvas.setOnMouseMoved(null);
         canvas.setOnMouseDragged(this::drawDraw);
-        canvas.setOnMouseReleased(this::drawEnd);
-        if (selected != null) {
-            selected.getShape().setFill(selected.getData().color);
+        canvas.setOnMouseReleased(mouseEvent -> drawEnd());
+        canvas.setOnScroll(null);
+        if(canvas.getScene() != null){
+            canvas.getScene().setOnKeyPressed(null);
+            canvas.getScene().setOnKeyReleased(null);
         }
+
+        //canvas.setOnContextMenuRequested(contextMenuEvent -> drawFinish());
+
+//        if (selected != null) {
+//            selected.getShape().setFill(selected.getData().color);
+//        }
         if (colorPicker != null){
             canvas.getChildren().remove(colorPicker);
         }
@@ -123,12 +135,12 @@ public class ShapeEdit extends ShapeDraw {
             canvas.getChildren().remove(colorPicker);
         }
         if (mouseEvent.getTarget() instanceof Shaper) {
-            if (selected != mouseEvent.getTarget() && selected != null){
-                selected.getShape().setFill(selected.getData().color);
-            }
+//            if (selected != mouseEvent.getTarget() && selected != null){
+//                selected.getShape().setFill(selected.getData().color);
+//            }
             selected = (Shaper) mouseEvent.getTarget();
-            selected.getShape().setFill(Color.BLUE);
-            selected.getShape().toFront();
+//            selected.getShape().setFill(Color.BLUE);
+
 
 //            xdif = mouseEvent.getX() - selected.getAnchorX();
 //            ydif = mouseEvent.getY() - selected.getAnchorY();
@@ -136,9 +148,9 @@ public class ShapeEdit extends ShapeDraw {
             xclick = mouseEvent.getX();
             yclick = mouseEvent.getY();
         }else {
-            if (selected != null) {
-                selected.getShape().setFill(selected.getData().color);
-            }
+//            if (selected != null) {
+//                selected.getShape().setFill(selected.getData().color);
+//            }
             selected = null;
         }
     }
@@ -148,7 +160,7 @@ public class ShapeEdit extends ShapeDraw {
      * @param mouseEvent Event przesunięcia myszy
      */
     public void moveShape(MouseEvent mouseEvent) {
-        if (mouseEvent.getTarget() instanceof Shaper  && selected != null) {
+        if (mouseEvent.getTarget() == selected) {
             Translate translation = selected.getData().translate;
             translation.setX(translation.getX() + mouseEvent.getX() - xclick); //zmiana położenia figury o dystans, jaki pokonała mysz od ostatniego uruchomienia funkcji
             translation.setY(translation.getY() + mouseEvent.getY() - yclick); // xyclick-punkt ostatniej zmiany położenia
@@ -164,16 +176,19 @@ public class ShapeEdit extends ShapeDraw {
      *
      */
     public void scaleShape(ScrollEvent scrollEvent) {
-        if (scrollEvent.getTarget() instanceof Shaper && selected != null) {
+        if (scrollEvent.getTarget() == selected) {
             //Zmienna ustalająca ilość skalowania, wprost proporcjonalna do przescrollowanej odległości, odwrotnie proporcjonalna do rzeczywistej wielkości figury (aby uzyskać płynne skalowanie)
             double scalingConst = (1+(scrollEvent.getDeltaY() / (5 * selected.getShape().getBoundsInParent().getWidth())));
+
             Scale scalation = selected.getData().scale;
             scalation.setX(scalation.getX() * scalingConst);
             scalation.setY(scalation.getY() * scalingConst);
+
             if (selected.getShape().getBoundsInParent().getHeight() < 16) {
                 scalation.setX(scalation.getX() / scalingConst);
                 scalation.setY(scalation.getY() / scalingConst);
             }
+
             selected.getShape().setStrokeWidth(5/scalation.getX());
         }
     }
@@ -183,7 +198,7 @@ public class ShapeEdit extends ShapeDraw {
      * @param scrollEvent - Event przesunięcia scrolla
      */
     public void rotateShape(ScrollEvent scrollEvent) {
-        if (scrollEvent.getTarget() instanceof Shaper  && selected != null) {
+        if (scrollEvent.getTarget() == selected) {
             Rotate rotation = selected.getData().rotate;
             rotation.setAngle(rotation.getAngle() + scrollEvent.getDeltaY() / 16);
         }
@@ -194,8 +209,9 @@ public class ShapeEdit extends ShapeDraw {
      * @param contextMenuEvent event contextMenuRequested
      */
     private void colorPick(ContextMenuEvent contextMenuEvent) {
-        if (selected != null && contextMenuEvent.getTarget() instanceof Shaper) {
+        if (contextMenuEvent.getTarget() == selected) {
             selected.getShape().setFill(selected.getData().color);
+
             colorPicker = new ColorPicker(selected.getData().color);
             colorPicker.setLayoutX(contextMenuEvent.getX());
             colorPicker.setLayoutY(contextMenuEvent.getY());
